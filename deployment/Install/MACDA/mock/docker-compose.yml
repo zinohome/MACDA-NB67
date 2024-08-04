@@ -2,7 +2,7 @@ version: '3.7'
 services:
   mock-redpanda:
     # NOTE: Please use the latest version here!
-    image: harbor.naivehero.top/macda/redpanda:v22.3.9
+    image: harbor.naivehero.top/macda/redpanda:v24.2.1
     container_name: mock-redpanda
     hostname: mock-redpanda
     restart: unless-stopped
@@ -13,7 +13,7 @@ services:
     - --overprovisioned
     - --node-id 0
     - --kafka-addr PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
-    - --advertise-kafka-addr PLAINTEXT://mock-redpanda:29092,OUTSIDE://192.168.32.160:39092
+    - --advertise-kafka-addr PLAINTEXT://mock-redpanda:29092,OUTSIDE://192.168.32.17:39092
     - --pandaproxy-addr PLAINTEXT://0.0.0.0:28082,OUTSIDE://0.0.0.0:8082
     - --advertise-pandaproxy-addr PLAINTEXT://mock-redpanda:28082,OUTSIDE://mock-redpanda:8082
     volumes:
@@ -33,7 +33,7 @@ services:
     networks:
       - macdanet
   mock-redpanda-console:
-    image: harbor.naivehero.top/macda/redpanda-console:v2.1.1
+    image: harbor.naivehero.top/macda/redpanda-console:v2.7.0
     container_name: mock-redpanda-console
     hostname: mock-redpanda-console
     restart: on-failure
@@ -105,7 +105,7 @@ services:
     networks:
       - macdanet
   mock-connect-starter:
-    image: phusion/passenger-full:latest
+    image: harbor.naivehero.top/baseimages/passenger-full:latest
     hostname: mock-connect-starter
     container_name: mock-connect-starter
     volumes:
@@ -130,7 +130,7 @@ services:
     #  - "8180:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: mock-redpanda
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 192.168.32.160:39092
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 192.168.32.17:39092
       KAFKA_CLUSTERS_0_SCHEMAREGISTRY: "http://mock-redpanda:8081"
       KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: "mock-kafka-connect"
       KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: "http://mock-kafka-connect:8083"
