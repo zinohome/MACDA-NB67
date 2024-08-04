@@ -2,7 +2,7 @@ version: '3.7'
 services:
   redpanda:
     # NOTE: Please use the latest version here!
-    image: harbor.zinohome.com/macda/redpanda:v22.3.9
+    image: harbor.naivehero.top/macda/redpanda:v22.3.9
     container_name: redpanda
     hostname: redpanda
     restart: unless-stopped
@@ -33,7 +33,7 @@ services:
     networks:
       - macdanet
   redpanda-console:
-    image: harbor.zinohome.com/macda/redpanda-console:v2.1.1
+    image: harbor.naivehero.top/macda/redpanda-console:v2.1.1
     container_name: redpanda-console
     hostname: redpanda-console
     restart: unless-stopped
@@ -68,7 +68,7 @@ services:
     networks:
       - macdanet
   kafka-connect:
-    image: harbor.zinohome.com/macda/kafka-connect:latest
+    image: harbor.naivehero.top/macda/kafka-connect:latest
     hostname: kafka-connect
     container_name: kafka-connect
     restart: unless-stopped
@@ -120,7 +120,7 @@ services:
     networks:
       - macdanet
   kafka-ui:
-    image: harbor.zinohome.com/macda/kafka-ui:latest
+    image: harbor.naivehero.top/macda/kafka-ui:latest
     hostname: kafka-ui
     container_name: kafka-ui
     restart: unless-stopped
@@ -144,7 +144,7 @@ services:
     networks:
       - macdanet
   ksqldb-server:
-    image: harbor.zinohome.com/macda/ksqldb-server:0.27.2
+    image: harbor.naivehero.top/macda/ksqldb-server:0.27.2
     hostname: ksqldb-server
     container_name: ksqldb-server
     restart: unless-stopped
@@ -165,7 +165,7 @@ services:
     networks:
       - macdanet
   ksqldb-cli:
-    image: harbor.zinohome.com/macda/ksqldb-cli:0.27.2
+    image: harbor.naivehero.top/macda/ksqldb-cli:0.27.2
     container_name: ksqldb-cli
     hostname: ksqldb-cli
     restart: unless-stopped
@@ -176,7 +176,7 @@ services:
     networks:
       - macdanet
   mirror-maker:
-    image: harbor.zinohome.com/macda/mirror-maker2:2.8.1
+    image: harbor.naivehero.top/macda/mirror-maker2:2.8.1
     container_name: mirror-maker
     hostname: mirror-maker
     restart: unless-stopped
@@ -192,7 +192,7 @@ services:
       - macdanet
   newminio:
     # NOTE: Please use the latest version here!
-    image: harbor.zinohome.com/macda/minio:latest
+    image: harbor.naivehero.top/macda/minio:latest
     container_name: newminio
     hostname: newminio
     restart: unless-stopped
@@ -213,7 +213,7 @@ services:
     networks:
       - macdanet
   createbuckets:
-    image: harbor.zinohome.com/macda/mc:latest
+    image: harbor.naivehero.top/macda/mc:latest
     container_name: createbuckets
     hostname: createbuckets
     depends_on:
@@ -245,7 +245,7 @@ services:
     networks:
       - macdanet
   graphql:
-    image: harbor.zinohome.com/macda/graphql-engine:v2.19.0
+    image: harbor.naivehero.top/macda/graphql-engine:v2.19.0
     container_name: graphql
     hostname: graphql
     restart: unless-stopped
@@ -335,7 +335,7 @@ services:
       - macdanet
   desktop:
     # latest, slim, full
-    image: harbor.zinohome.com/kasmweb/kasm-desktop-focal-web:1.12.1
+    image: harbor.naivehero.top/kasmweb/kasm-desktop-focal-web:1.12.1
     container_name: desktop
     hostname: desktop
     restart: unless-stopped

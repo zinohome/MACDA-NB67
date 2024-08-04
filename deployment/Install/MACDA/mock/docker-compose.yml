@@ -2,7 +2,7 @@ version: '3.7'
 services:
   mock-redpanda:
     # NOTE: Please use the latest version here!
-    image: harbor.zinohome.com/macda/redpanda:v22.3.9
+    image: harbor.naivehero.top/macda/redpanda:v22.3.9
     container_name: mock-redpanda
     hostname: mock-redpanda
     restart: unless-stopped
@@ -33,7 +33,7 @@ services:
     networks:
       - macdanet
   mock-redpanda-console:
-    image: harbor.zinohome.com/macda/redpanda-console:v2.1.1
+    image: harbor.naivehero.top/macda/redpanda-console:v2.1.1
     container_name: mock-redpanda-console
     hostname: mock-redpanda-console
     restart: on-failure
@@ -68,7 +68,7 @@ services:
     networks:
       - macdanet
   mock-kafka-connect:
-    image: harbor.zinohome.com/macda/kafka-connect:latest
+    image: harbor.naivehero.top/macda/kafka-connect:latest
     hostname: mock-kafka-connect
     container_name: mock-kafka-connect
     restart: on-failure
@@ -120,7 +120,7 @@ services:
     networks:
       - macdanet
   mock-kafka-ui:
-    image: harbor.zinohome.com/macda/kafka-ui:latest
+    image: harbor.naivehero.top/macda/kafka-ui:latest
     hostname: mock-kafka-ui
     container_name: mock-kafka-ui
     restart: unless-stopped
@@ -143,7 +143,7 @@ services:
       - macdanet
   mock-desktop:
     # latest, slim, full
-    image: harbor.zinohome.com/kasmweb/kasm-desktop-focal-web:1.12.1
+    image: harbor.naivehero.top/kasmweb/kasm-desktop-focal-web:1.12.1
     container_name: mock-desktop
     hostname: mock-desktop
     restart: unless-stopped
