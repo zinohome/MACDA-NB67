@@ -17,10 +17,12 @@ if __name__ == '__main__':
 #    rdict = Nb5.from_file_to_dict('FRAME-DATA_1.BIN')
 #    log.debug(rdict)
 #    log.debug(json.dumps(rdict))
-    rdict = Nb67.from_file('whole_frame.bin').__dict__.copy()
-    for k,v in rdict.items():
-        log.debug('%s = [%s]' % (k,v))
-    #log.debug(rdict)
-    #log.debug(json.dumps(rdict))
+    #rdict = Nb67.from_file('whole_frame.bin').__dict__.copy()
+    rdict = Nb67.from_file_to_dict('whole_frame.bin')
+    #for k,v in rdict.items():
+    #    log.debug('%s = [%s]' % (k,v))
+    log.debug(len(rdict.items()))
+    log.debug(rdict)
+    log.debug(json.dumps(rdict))
 
 
