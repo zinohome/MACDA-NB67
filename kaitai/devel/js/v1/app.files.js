@@ -38,7 +38,15 @@ define(["require", "exports", "localforage", "dateformat", "./app", "../utils"],
             this.root = newRoot;
             return this.save();
         }
-        get(fn) { return localforage.getItem(this.fileKey(fn)); }
+        get(fn) {
+            return localforage.getItem(this.fileKey(fn))
+                .then(content => {
+                if (content === null) {
+                    throw new Error('file not found');
+                }
+                return content;
+            });
+        }
         put(fn, data) {
             return this.getRootNode().then(root => {
                 var node = fsHelper.selectNode(root, fn);
@@ -53,7 +61,26 @@ define(["require", "exports", "localforage", "dateformat", "./app", "../utils"],
         getRootNode() { return Promise.resolve(this.files); }
         get(fn) {
             if (fn.toLowerCase().endsWith(".ksy"))
-                return Promise.resolve($.ajax({ url: fn }));
+                return fetch(fn)
+                    .then(response => {
+                    if (!response.ok) {
+                        let msg;
+                        if (response.status === 404) {
+                            msg = 'file not found';
+                        }
+                        else {
+                            const textAppendix = response.statusText ? ` (${response.statusText})` : '';
+                            msg = `server responded with HTTP status ${response.status}${textAppendix}`;
+                        }
+                        throw new Error(msg);
+                    }
+                    return response.text();
+                }, err => {
+                    if (err instanceof TypeError) {
+                        throw new Error(`cannot reach the server (message: ${err.message}), check your internet connection`);
+                    }
+                    throw err;
+                });
             else
                 return utils_1.downloadFile(fn);
         }
@@ -266,8 +293,6 @@ define(["require", "exports", "localforage", "dateformat", "./app", "../utils"],
                 });
             });
         });
-        fileTreeCont.on("rename_node.jstree", () => app_1.ga("filetree", "rename"));
-        fileTreeCont.on("move_node.jstree", () => app_1.ga("filetree", "move"));
         fileTreeCont.on("create_node.jstree rename_node.jstree delete_node.jstree move_node.jstree paste.jstree", saveTree);
         fileTreeCont.on("move_node.jstree", (e, data) => app_1.app.ui.fileTree.open_node(app_1.app.ui.fileTree.get_node(data.parent)));
         fileTreeCont.on("select_node.jstree", (e, selectNodeArgs) => {
@@ -276,8 +301,6 @@ define(["require", "exports", "localforage", "dateformat", "./app", "../utils"],
         });
         var lastMultiSelectReport = 0;
         fileTreeCont.on("select_node.jstree", (e, args) => {
-            if (e.timeStamp - lastMultiSelectReport > 1000 && args.selected.length > 1)
-                app_1.ga("filetree", "multi_select");
             lastMultiSelectReport = e.timeStamp;
         });
         var ksyParent;
