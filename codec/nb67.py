@@ -338,86 +338,90 @@ class Nb67(KaitaiStruct):
 
     def from_file_to_dict(binfile):
         dev_mode = settings.DEV_MODE
-        nb5dict = Nb67.from_file(binfile).__dict__.copy()
+        nb67dict = Nb67.from_file(binfile).__dict__.copy()
         if dev_mode:
-            nb5dict[
-                'msg_calc_dvc_no'] = f"0{nb5dict['msg_line_no']}0{str(nb5dict['msg_train_no']).zfill(2)}0{nb5dict['msg_carriage_no']}"
-            nb5dict[
-                'msg_calc_train_no'] = f"0{nb5dict['msg_line_no']}0{str(nb5dict['msg_train_no']).zfill(2)}"
+            nb67dict[
+                'msg_calc_dvc_no'] = f"0{nb67dict['msg_line_no']}0{str(nb67dict['msg_train_no']).zfill(2)}0{nb67dict['msg_carriage_no']}"
+            nb67dict[
+                'msg_calc_train_no'] = f"0{nb67dict['msg_line_no']}0{str(nb67dict['msg_train_no']).zfill(2)}"
         else:
-            nb5dict[
-                'msg_calc_dvc_no'] = f"{str(nb5dict['msg_train_no']).zfill(5)}0{nb5dict['msg_carriage_no']}"
-            nb5dict[
-                'msg_calc_train_no'] = f"{str(nb5dict['msg_train_no']).zfill(5)}"
-        nb5dict[
-            'msg_calc_dvc_time'] = f"20{nb5dict['msg_src_dvc_year']}-{nb5dict['msg_src_dvc_month']}-{nb5dict['msg_src_dvc_day']} {nb5dict['msg_src_dvc_hour']}:{nb5dict['msg_src_dvc_minute']}:{nb5dict['msg_src_dvc_second']}"
-        nb5dict['msg_calc_parse_time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        for key in ('_io', '_parent', '_root',
+            nb67dict[
+                'msg_calc_dvc_no'] = f"{str(nb67dict['msg_train_no']).zfill(5)}0{nb67dict['msg_carriage_no']}"
+            nb67dict[
+                'msg_calc_train_no'] = f"{str(nb67dict['msg_train_no']).zfill(5)}"
+        nb67dict[
+            'msg_calc_dvc_time'] = f"20{nb67dict['msg_src_dvc_year']}-{nb67dict['msg_src_dvc_month']}-{nb67dict['msg_src_dvc_day']} {nb67dict['msg_src_dvc_hour']}:{nb67dict['msg_src_dvc_minute']}:{nb67dict['msg_src_dvc_second']}"
+        nb67dict['msg_calc_parse_time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        keylst = list(nb67dict.keys()).copy()
+        for k in keylst:
+            if k.startswith('ig_rsv') or k.startswith('wrsv') or k.startswith('humdity') or k.__contains__('rsv_'):
+                #log.debug(k)
+                del nb67dict[k]
+        for k in ('_io', '_parent', '_root',
                     'msg_reversed1', 'msg_reversed2', 'msg_reversed3', 'msg_reversed4', 'msg_reversed5',
-                    'dvc_cfbk_revers0', 'dvc_cfbk_revers1', 'dvc_cfbk_revers2',
                     'msg_src_dvc_year', 'msg_src_dvc_month', 'msg_src_dvc_day',
                     'msg_src_dvc_hour', 'msg_src_dvc_minute', 'msg_src_dvc_second'):
-            if key in nb5dict:
-                del nb5dict[key]
-        for key,value in nb5dict.items():
-            #if key.startswith('ig_rsv'):
-                #log.debug(key)
-            if key.startswith('ig_rsv') or key.startswith('wrsv') or key.startswith('humdity') or key.__contains__('rsv_'):
-                log.debug(key)
+            if k in nb67dict:
+                del nb67dict[k]
+        for key,value in nb67dict.items():
             if isinstance(value, bool):
                 if value:
-                    nb5dict[key] = 1
+                    nb67dict[key] = 1
                 else:
-                    nb5dict[key] = 0
+                    nb67dict[key] = 0
             if key in div100list:
                 if value/100 == value//100:
-                    nb5dict[key] = value//100
+                    nb67dict[key] = value//100
                 else:
-                    nb5dict[key] = round(value/100,2)
+                    nb67dict[key] = round(value/100,2)
             if key in div10list:
                 if value/10 == value//10:
-                    nb5dict[key] = value//10
+                    nb67dict[key] = value//10
                 else:
-                    nb5dict[key] = round(value/10,1)
-        return nb5dict
+                    nb67dict[key] = round(value/10,1)
+        return nb67dict
 
     def from_bytes_to_dict(bytesobj):
         dev_mode = settings.DEV_MODE
-        nb5dict = Nb67.from_bytes(bytesobj).__dict__.copy()
+        nb67dict = Nb67.from_bytes(bytesobj).__dict__.copy()
         if dev_mode:
-            nb5dict[
-                'msg_calc_dvc_no'] = f"0{nb5dict['msg_line_no']}0{str(nb5dict['msg_train_no']).zfill(2)}0{nb5dict['msg_carriage_no']}"
-            nb5dict[
-                'msg_calc_train_no'] = f"0{nb5dict['msg_line_no']}0{str(nb5dict['msg_train_no']).zfill(2)}"
+            nb67dict[
+                'msg_calc_dvc_no'] = f"0{nb67dict['msg_line_no']}0{str(nb67dict['msg_train_no']).zfill(2)}0{nb67dict['msg_carriage_no']}"
+            nb67dict[
+                'msg_calc_train_no'] = f"0{nb67dict['msg_line_no']}0{str(nb67dict['msg_train_no']).zfill(2)}"
         else:
-            nb5dict[
-                'msg_calc_dvc_no'] = f"{str(nb5dict['msg_train_no']).zfill(5)}0{nb5dict['msg_carriage_no']}"
-            nb5dict[
-                'msg_calc_train_no'] = f"{str(nb5dict['msg_train_no']).zfill(5)}"
-        nb5dict[
-            'msg_calc_dvc_time'] = f"20{nb5dict['msg_src_dvc_year']}-{nb5dict['msg_src_dvc_month']}-{nb5dict['msg_src_dvc_day']} {nb5dict['msg_src_dvc_hour']}:{nb5dict['msg_src_dvc_minute']}:{nb5dict['msg_src_dvc_second']}"
-        nb5dict['msg_calc_parse_time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        for key in ('_io', '_parent', '_root',
-                    'msg_reversed1', 'msg_reversed2', 'msg_reversed3', 'msg_reversed4', 'msg_reversed5',
-                    'dvc_cfbk_revers0', 'dvc_cfbk_revers1', 'dvc_cfbk_revers2',
-                    'msg_src_dvc_year', 'msg_src_dvc_month', 'msg_src_dvc_day',
-                    'msg_src_dvc_hour', 'msg_src_dvc_minute', 'msg_src_dvc_second'):
-            if key in nb5dict:
-                del nb5dict[key]
-        for key,value in nb5dict.items():
+            nb67dict[
+                'msg_calc_dvc_no'] = f"{str(nb67dict['msg_train_no']).zfill(5)}0{nb67dict['msg_carriage_no']}"
+            nb67dict[
+                'msg_calc_train_no'] = f"{str(nb67dict['msg_train_no']).zfill(5)}"
+        nb67dict[
+            'msg_calc_dvc_time'] = f"20{nb67dict['msg_src_dvc_year']}-{nb67dict['msg_src_dvc_month']}-{nb67dict['msg_src_dvc_day']} {nb67dict['msg_src_dvc_hour']}:{nb67dict['msg_src_dvc_minute']}:{nb67dict['msg_src_dvc_second']}"
+        nb67dict['msg_calc_parse_time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        keylst = list(nb67dict.keys()).copy()
+        for k in keylst:
+            if k.startswith('ig_rsv') or k.startswith('wrsv') or k.startswith('humdity') or k.__contains__('rsv_'):
+                # log.debug(k)
+                del nb67dict[k]
+        for k in ('_io', '_parent', '_root',
+                  'msg_reversed1', 'msg_reversed2', 'msg_reversed3', 'msg_reversed4', 'msg_reversed5',
+                  'msg_src_dvc_year', 'msg_src_dvc_month', 'msg_src_dvc_day',
+                  'msg_src_dvc_hour', 'msg_src_dvc_minute', 'msg_src_dvc_second'):
+            if k in nb67dict:
+                del nb67dict[k]
+        for key,value in nb67dict.items():
             if isinstance(value, bool):
                 if value:
-                    nb5dict[key] = 1
+                    nb67dict[key] = 1
                 else:
-                    nb5dict[key] = 0
+                    nb67dict[key] = 0
             if key in div100list:
                 if value / 100 == value // 100:
-                    nb5dict[key] = value // 100
+                    nb67dict[key] = value // 100
                 else:
-                    nb5dict[key] = round(value / 100, 2)
+                    nb67dict[key] = round(value / 100, 2)
             if key in div10list:
                 if value / 10 == value // 10:
-                    nb5dict[key] = value // 10
+                    nb67dict[key] = value // 10
                 else:
-                    nb5dict[key] = round(value / 10, 1)
-        return nb5dict
+                    nb67dict[key] = round(value / 10, 1)
+        return nb67dict
