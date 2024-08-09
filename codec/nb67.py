@@ -385,6 +385,9 @@ class Nb67(KaitaiStruct):
         dev_mode = settings.DEV_MODE
         nb67dict = Nb67.from_bytes(bytesobj).__dict__.copy()
         if dev_mode:
+            nb67dict['msg_line_no'] = 7
+            nb67dict['msg_train_no'] = 6
+            nb67dict['dvc_train_no'] = 6
             nb67dict[
                 'msg_calc_dvc_no'] = f"0{nb67dict['msg_line_no']}0{str(nb67dict['msg_train_no']).zfill(2)}0{nb67dict['msg_carriage_no']}"
             nb67dict[

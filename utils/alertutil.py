@@ -102,12 +102,13 @@ class Alertutil(metaclass=Cached):
         headers = {"content-type":"application/json"}
         data = json.dumps(statuslist, encoding="utf-8", ensure_ascii=False)
         #log.debug(data)
-        try:
-            response = requests.post(srvurl, data.encode(), headers=headers)
-            log.debug('Send Status data with response code: [%s] ' % response.status_code)
-        except Exception as exp:
-            log.error('Exception at alrtutil.send_status() %s ' % exp)
-            traceback.print_exc()
+        if settings.SEND_STATUS_RECORD:
+            try:
+                response = requests.post(srvurl, data.encode(), headers=headers)
+                log.debug('Send Status data with response code: [%s] ' % response.status_code)
+            except Exception as exp:
+                log.error('Exception at alrtutil.send_status() %s ' % exp)
+                traceback.print_exc()
 
     def send_predict(self, predictlist):
         srvurl = settings.FAULT_RECORD_URL

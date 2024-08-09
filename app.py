@@ -26,6 +26,8 @@ run_mode = settings.RUN_MODE
 #app.discover('pipeline.batchparse')
 #app.discover('pipeline.batchstore')
 app.discover('pipeline.status')
+app.discover('pipeline.lifereport')
+app.discover('pipeline.statisreport')
 '''
 if run_mode.strip().lower() == 'parse':
     # run parse

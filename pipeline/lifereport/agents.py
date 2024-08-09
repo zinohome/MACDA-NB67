@@ -44,6 +44,8 @@ async def life_report():
     else:
         statis_data = tu.get_statis_data('pro')
     # Generata statis data
+    #log.debug('===============')
+    #log.debug(statis_data)
     life_data_list = []
     if statis_data['len'] > 0:
         for item in statis_data['data']:
@@ -55,7 +57,7 @@ async def life_report():
                 carbin_no = dvc_no_list[2]
                 trainNo = f"0{line_no}0{str(train_no).zfill(2)}"
                 partCodepre = f"0{line_no}0{str(int(carbin_no) - 1).zfill(2)}"
-                # log.debug('line_no: %s, train_no: %s, carbin_no: %s' % (line_no, train_no, carbin_no))
+                log.debug('line_no: %s, train_no: %s, carbin_no: %s' % (line_no, train_no, carbin_no))
                 for code in au.partcodefield:
                     sdata = {}
                     line_name = str(line_no).replace(" ", "")
@@ -76,5 +78,5 @@ async def life_report():
                     sdata['useTime'] = 0
                     sdata['flag'] = 0
                     life_data_list.append(sdata)
-    log.debug('life_data_list is : %s' % life_data_list)
+    #log.debug('life_data_list is : %s' % life_data_list)
     au.send_lifereport(life_data_list)
