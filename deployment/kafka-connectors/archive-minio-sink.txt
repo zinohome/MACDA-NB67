@@ -32,7 +32,7 @@ http://kafka-connect:8083/connectors/MACDA-archive-to-minio/config \
     "s3.bucket.name": "macda-archive-bucket",
     "s3.region": "ap-east-1",
     "storage.class": "io.confluent.connect.s3.storage.S3Storage",
-    "store.url": "http://192.168.32.160:9000",
+    "store.url": "http://192.168.32.17:9000",
     "topics.regex": "^MACDA-archive-signal-parsed-\\d*-\\d*-\\d*$",
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "value.converter.schemas.enable": "false"
