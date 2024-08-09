@@ -20,6 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 class Settings(AppSettings):
     DEBUG: bool = True
     DEV_MODE: bool = True
+    SRC_MODE: str = 'Bin'
     RUN_MODE: str = 'Parse'
     SOURCE_TOPIC_NAME: str = 'signal-in'
     PARSED_TOPIC_NAME: str = 'signal-parsed'

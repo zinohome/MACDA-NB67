@@ -20,6 +20,7 @@ class AppSettings(BaseSettings):
     DEBUG: bool = Field(True, env='DEBUG')
     RUN_MODE: str = Field('Parse', env='RUN_MODE')
     DEV_MODE: bool = Field(True, env='DEV_MODE')
+    SRC_MODE: str = Field('Bin', env='SRC_MODE')
     SOURCE_TOPIC_NAME: str = Field('signal-in', env='SOURCE_TOPIC_NAME')
     PARSED_TOPIC_NAME: str = Field('signal-in', env='PARSED_TOPIC_NAME')
     KAFKA_BOOTSTRAP_SERVER: str = Field('kafka://localhost:9092', env='KAFKA_BOOTSTRAP_SERVER')
