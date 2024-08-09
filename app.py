@@ -28,7 +28,8 @@ run_mode = settings.RUN_MODE
 #app.discover('pipeline.status')
 #app.discover('pipeline.lifereport')
 #app.discover('pipeline.statisreport')
-app.discover('pipeline.faultreport')
+#app.discover('pipeline.faultreport')
+#app.discover('pipeline.predict')
 '''
 if run_mode.strip().lower() == 'parse':
     # run parse
