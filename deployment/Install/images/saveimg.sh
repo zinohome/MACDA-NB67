@@ -22,7 +22,7 @@ docker save -o timescaledb.tar harbor.naivehero.top/macda/timescaledb-ha:pg14-la
 gzip timescaledb.tar && \
 docker save -o graphql.tar harbor.naivehero.top/macda/graphql-engine:v2.40.0 && \
 gzip graphql.tar && \
-docker save -o harbor.naivehero.top/macda/pgadmin4:8.10 && \
+docker save -o pgadmin4.tar harbor.naivehero.top/macda/pgadmin4:8.10 && \
 gzip pgadmin4.tar && \
 docker save -o macda-nb.tar harbor.naivehero.top/macda/macda:nb67-v1.2408 && \
 gzip macda-nb.tar && \
