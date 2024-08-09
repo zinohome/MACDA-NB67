@@ -31,7 +31,7 @@ class Cached(type):
             return obj
 class Alertutil(metaclass=Cached):
     def __init__(self):
-        log.debug('Code loading.')
+        log.debug('========== Alertutil init : Code loading.')
         alertcodefile = os.path.join(DATA_DIR, 'alertcode.xlsx')
         partcodefile = os.path.join(DATA_DIR, 'partcode.xlsx')
         self.__alertcode__ = pd.read_excel(alertcodefile)
@@ -39,7 +39,7 @@ class Alertutil(metaclass=Cached):
         self.__partcode__ = pd.read_excel(partcodefile)
         self.__partcode__['name'] = self.__partcode__['name'].apply(str.lower)
         #log.debug(self.__partcode__['name'])
-        log.debug('Code loaded.')
+        log.debug('========== Alertutil init : Code loaded.')
 
     def getvalue(self, codetype, rowvalue, colname):
         rvalue = ''

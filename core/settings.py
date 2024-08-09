@@ -56,13 +56,14 @@ class Settings(AppSettings):
     #Rest Server URL
     SEND_FAULT_INTERVAL: int = 300
     SEND_STATS_INTERVAL: int = 14400
+    SEND_STATUS_INTERVAL: int = 600
     SEND_FAULT_RECORD: bool = False
     SEND_STATS_RECORD: bool = False
     SEND_LIFE_RECORD: bool = False
     FAULT_RECORD_URL: str = 'http://192.168.32.17:8180/api/rest/InsertSrvAlert'
     STATS_RECORD_URL: str = 'http://192.168.32.17:8180/api/rest/InsertSrvLife'
     LIFE_RECORD_URL: str = 'http://192.168.32.17:8180/api/rest/InsertSrvLife'
-    SYS_STATUS_URL: str = 'http://172.20.250.88:8080/gate/METRO-SELFCHECK/api/faultRecordsSubsystem/saveStatus'
+    SYS_STATUS_URL: str = 'http://192.168.66.134:8080/gate/METRO-SELFCHECK-SUBSYSTEM/api/faultRecordsSubsystem/saveStatus'
 
 settings = Settings(_env_file=os.path.join(BASE_DIR, '.env'))
 

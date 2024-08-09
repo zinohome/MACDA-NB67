@@ -55,6 +55,7 @@ class AppSettings(BaseSettings):
     #Rest Server URL
     SEND_FAULT_INTERVAL: int = Field(300, env='SEND_FAULT_INTERVAL')
     SEND_STATS_INTERVAL: int = Field(14400, env='SEND_STATS_INTERVAL')
+    SEND_STATUS_INTERVAL: int = Field(14400, env='SEND_STATUS_INTERVAL')
     SEND_FAULT_RECORD: bool = Field(False, env='SEND_FAULT_RECORD')
     SEND_STATS_RECORD: bool = Field(False, env='SEND_STATS_RECORD')
     SEND_LIFE_RECORD: bool = Field(False, env='SEND_LIFE_RECORD')
@@ -62,7 +63,6 @@ class AppSettings(BaseSettings):
     STATS_RECORD_URL: str = Field('http://192.168.32.17:8180/api/rest/InsertSrvLife', env='STATS_RECORD_URL')
     LIFE_RECORD_URL: str = Field('http://192.168.32.17:8180/api/rest/InsertSrvLife', env='LIFE_RECORD_URL')
     SYS_STATUS_URL: str = Field('http://172.20.250.88:8080/gate/METRO-SELFCHECK/api/faultRecordsSubsystem/saveStatus', env='SYS_STATUS_URL')
-
     @validator('KAFKA_BOOTSTRAP_SERVER', 'SCHEMA_REGISTRY_URL', pre = True)
     def valid_url(url: str):
         return url[:-1] if url.endswith('/') else url

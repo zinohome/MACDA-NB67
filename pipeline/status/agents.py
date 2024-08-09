@@ -18,11 +18,11 @@ from utils.tsutil import TSutil
 import time
 
 
-@app.timer(interval=600)
+@app.timer(interval=settings.SEND_STATUS_INTERVAL)
 async def on_started():
     status = {}
     log.debug("==========********** Send system health status ==========**********")
-    tu = TSutil()
+    #tu = TSutil()
     au = Alertutil()
     dev_mode = settings.DEV_MODE
     status['message_type'] = '500'

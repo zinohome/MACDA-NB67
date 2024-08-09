@@ -51,7 +51,7 @@ def format_prepared_request(req):
         method=req.method,
         url=req.path,
         headers=indent(headers),
-        body=indent(body),
+        body=body,
     )
     return s
 
@@ -64,7 +64,7 @@ def hello(req=Request()):
     return raw_request
 
 def main():
-    server.start(host="0.0.0.0", port=9090)
+    server.start(host="0.0.0.0", port=8080)
 
 if __name__ == "__main__":
     main()
