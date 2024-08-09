@@ -10,7 +10,7 @@
 import binascii
 import simplejson as json
 from app import app
-from codec.nb5 import Nb5
+from codec.nb67 import Nb67
 from core.settings import settings
 from pipeline.fetcher.models import output_schema
 from pipeline.parse.models import input_topic, output_topic, json_schema
@@ -27,7 +27,7 @@ async def parse_signal(stream):
         }
         if dev_mode:
             # Parse data and send to parsed topic
-            parsed_dict = Nb5.from_bytes_to_dict(data)
+            parsed_dict = Nb67.from_bytes_to_dict(data)
             out_record = {"schema": jschema, "payload": parsed_dict}
             if dev_mode:
                 key = f"{parsed_dict['msg_calc_dvc_no']}-{parsed_dict['msg_calc_parse_time']}"
@@ -45,7 +45,7 @@ async def parse_signal(stream):
             datadict = json.loads(str(data, encoding = 'utf-8'))
             if 'message_data' in datadict.keys():
                 # Parse data and send to parsed topic
-                parsed_dict = Nb5.from_bytes_to_dict(binascii.a2b_hex(datadict['message_data']))
+                parsed_dict = Nb67.from_bytes_to_dict(binascii.a2b_hex(datadict['message_data']))
                 if not parsed_dict['msg_calc_dvc_time'].strip().startswith('2059-'):
                     out_record = {"schema":jschema,"payload":parsed_dict}
                     if dev_mode:
