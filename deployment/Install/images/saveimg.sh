@@ -18,13 +18,13 @@ docker save -o minio.tar harbor.naivehero.top/macda/minio:latest && \
 gzip minio.tar && \
 docker save -o mc.tar harbor.naivehero.top/macda/mc:latest && \
 gzip mc.tar && \
-docker save -o timescaledb.tar timescale/timescaledb-ha:pg14-latest && \
+docker save -o timescaledb.tar harbor.naivehero.top/macda/timescaledb-ha:pg14-latest && \
 gzip timescaledb.tar && \
 docker save -o graphql.tar harbor.naivehero.top/macda/graphql-engine:v2.40.0 && \
 gzip graphql.tar && \
 docker save -o harbor.naivehero.top/macda/pgadmin4:8.10 && \
 gzip pgadmin4.tar && \
-docker save -o macda-nb.tar jointhero/macda:nb-v1.2408 && \
+docker save -o macda-nb.tar harbor.naivehero.top/macda/macda:nb67-v1.2408 && \
 gzip macda-nb.tar && \
 docker save -o desktop.tar harbor.naivehero.top/kasmweb/kasm-desktop-focal-web:1.12.1 && \
 gzip desktop.tar
