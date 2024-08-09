@@ -61,7 +61,7 @@ class Settings(AppSettings):
     SEND_STATS_RECORD: bool = False
     SEND_LIFE_RECORD: bool = False
     SEND_STATUS_RECORD: bool = False
-    FAULT_RECORD_URL: str = 'http://192.168.32.17:8180/api/rest/InsertSrvAlert'
+    FAULT_RECORD_URL: str = 'http://192.168.66.134:8080/gate/METRO-PHM/api/faultRecordsSubsystem/saveRecord'
     STATS_RECORD_URL: str = 'http://192.168.66.134:8080/gate/METRO-PHM/api/devices/status/train/saveOrUpdate'
     LIFE_RECORD_URL: str = 'http://192.168.66.134:8080/gate/METRO-PHM/api/devices/status/train/saveOrUpdate'
     SYS_STATUS_URL: str = 'http://192.168.66.134:8080/gate/METRO-SELFCHECK-SUBSYSTEM/api/faultRecordsSubsystem/saveStatus'

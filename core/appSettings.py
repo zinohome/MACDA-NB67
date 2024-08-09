@@ -60,7 +60,7 @@ class AppSettings(BaseSettings):
     SEND_STATS_RECORD: bool = Field(False, env='SEND_STATS_RECORD')
     SEND_LIFE_RECORD: bool = Field(False, env='SEND_LIFE_RECORD')
     SEND_STATUS_RECORD: bool = Field(False, env='SEND_STATUS_RECORD')
-    FAULT_RECORD_URL: str = Field('http://192.168.32.17:8180/api/rest/InsertSrvAlert', env='FAULT_RECORD_URL')
+    FAULT_RECORD_URL: str = Field('http://192.168.66.134:8080/gate/METRO-PHM/api/faultRecordsSubsystem/saveRecord', env='FAULT_RECORD_URL')
     STATS_RECORD_URL: str = Field('http://192.168.66.134:8080/gate/METRO-PHM/api/devices/status/train/saveOrUpdate', env='STATS_RECORD_URL')
     LIFE_RECORD_URL: str = Field('http://192.168.66.134:8080/gate/METRO-PHM/api/devices/status/train/saveOrUpdate', env='LIFE_RECORD_URL')
     SYS_STATUS_URL: str = Field('http://172.20.250.88:8080/gate/METRO-SELFCHECK/api/faultRecordsSubsystem/saveStatus', env='SYS_STATUS_URL')

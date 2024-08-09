@@ -57,6 +57,7 @@ def format_prepared_request(req):
 
 @request_map("/", method=["GET", "POST", "PUT"])
 @request_map("/test", method=["GET", "POST", "PUT"])
+@request_map("/gate/METRO-PHM/api/faultRecordsSubsystem/saveRecord", method=["GET", "POST", "PUT"])
 @request_map("/gate/METRO-PHM/api/devices/status/train/saveOrUpdate", method=["GET", "POST", "PUT"])
 @request_map("/gate/METRO-SELFCHECK-SUBSYSTEM/api/faultRecordsSubsystem/saveStatus", method=["GET", "POST", "PUT"])
 def hello(req=Request()):
