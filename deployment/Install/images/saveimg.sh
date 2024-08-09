@@ -4,7 +4,7 @@ docker save -o redpanda-console.tar harbor.naivehero.top/macda/redpanda-console:
 gzip redpanda-console.tar && \
 docker save -o kafka-connect.tar harbor.naivehero.top/macda/kafka-connect:latest && \
 gzip kafka-connect.tar && \
-docker save -o passenger.tar phusion/passenger-full:latest && \
+docker save -o passenger.tar harbor.naivehero.top/baseimages/passenger-full:latest && \
 gzip passenger.tar && \
 docker save -o kafka-ui.tar harbor.naivehero.top/macda/kafka-ui:latest && \
 gzip kafka-ui.tar && \
