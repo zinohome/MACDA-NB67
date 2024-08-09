@@ -8,7 +8,7 @@ from utils.log import log as log
 if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
-div10list = ['']
+div10list = ['fas_sys','ras_sys','tic','tveh_1','tveh_2','aq_t_u1','presdiff_u1','fas_u1','ras_u1','f_cp_u11','i_cp_u11','v_cp_u11','p_cp_u11','suckt_u11','suckp_u11','sp_u11','highpress_u11','sas_u11','ices_u11','f_cp_u12','i_cp_u12','v_cp_u12','p_cp_u12','suckt_u12','suckp_u12','sp_u12','highpress_u12','sas_u12','ices_u12','aq_t_u2','aq_h_u2','presdiff_u2','fas_u2','ras_u2','f_cp_u21','i_cp_u21','v_cp_u21','p_cp_u21','suckt_u21','suckp_u21','sp_u21','highpress_u21','sas_u21','ices_u21','f_cp_u22','i_cp_u22','v_cp_u22','p_cp_u22','suckt_u22','suckp_u22','sp_u22','highpress_u22','sas_u22','ices_u22','i_ef_u11','i_ef_u12','i_cf_u11','i_cf_u12','i_ef_u21','i_ef_u22','i_cf_u21','i_cf_u22','i_hvac_u1','i_hvac_u2','i_exufan']
 div100list = ['']
 
 class Nb67(KaitaiStruct):
