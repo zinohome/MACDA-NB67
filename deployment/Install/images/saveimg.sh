@@ -22,7 +22,7 @@ docker save -o timescaledb.tar timescale/timescaledb-ha:pg14-latest && \
 gzip timescaledb.tar && \
 docker save -o pgadmin4.tar dpage/pgadmin4:latest && \
 gzip pgadmin4.tar && \
-docker save -o macda-nb.tar jointhero/macda:nb-v1.0911 && \
+docker save -o macda-nb.tar jointhero/macda:nb-v1.2408 && \
 gzip macda-nb.tar && \
 docker save -o desktop.tar harbor.naivehero.top/kasmweb/kasm-desktop-focal-web:1.12.1 && \
 gzip desktop.tar
