@@ -83,9 +83,7 @@ class TSutil(metaclass=Cached):
         keylst = []
         valuelst = []
         masklst = []
-        ignorekeys = ['msg_header_code01', 'msg_header_code02', 'msg_length', 'msg_src_dvc_no', 'msg_host_dvc_no',
-                      'msg_type', 'msg_frame_no', 'msg_line_no', 'msg_train_type', 'msg_train_no', 'msg_carriage_no',
-                      'msg_protocal_version', 'msg_crc']
+        ignorekeys = ['msg_header_code01', 'msg_header_code02', 'msg_carriage_no', 'msg_protocal_version', 'msg_crc']
         for (key, value) in jsonobj.items():
             if not key in ignorekeys:
                 keylst.append(key)
@@ -109,14 +107,15 @@ class TSutil(metaclass=Cached):
     def insertjson(self, tablename, jsonobj):
         valuelst = []
         keystr = 'msg_calc_dvc_time, msg_calc_parse_time, msg_calc_dvc_no, msg_calc_train_no, indicators'
-        maskstr = '%s, %s, %s, %s'
+        maskstr = '%s, %s, %s, %s, %s'
         insertsql = f"INSERT INTO {tablename} ({keystr}) VALUES ({maskstr})"
         valuelst.append(str(jsonobj['msg_calc_dvc_time']))
         valuelst.append(str(jsonobj['msg_calc_parse_time']))
         valuelst.append(str(jsonobj['msg_calc_dvc_no']))
         valuelst.append(str(jsonobj['msg_calc_train_no']))
         valuelst.append(json.dumps(jsonobj))
-        # log.debug(insertsql)
+        #log.debug(insertsql)
+        #log.debug(valuelst)
         try:
             conn = self.conn_pool.getconn()
             cur = conn.cursor()
@@ -129,9 +128,7 @@ class TSutil(metaclass=Cached):
             traceback.print_exc()
 
     def batchinsert(self, tablename, timefieldname, jsonobjlst):
-        ignorekeys = ['msg_header_code01', 'msg_header_code02', 'msg_length', 'msg_src_dvc_no', 'msg_host_dvc_no',
-                      'msg_type', 'msg_frame_no', 'msg_line_no', 'msg_train_type', 'msg_train_no', 'msg_carriage_no',
-                      'msg_protocal_version', 'msg_crc']
+        ignorekeys = ['msg_header_code01', 'msg_header_code02', 'msg_carriage_no', 'msg_protocal_version', 'msg_crc']
         jsonobj = jsonobjlst[0]['payload']
         cols = []
         for (key, value) in jsonobj.items():
