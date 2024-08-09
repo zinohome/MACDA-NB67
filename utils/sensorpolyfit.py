@@ -85,7 +85,7 @@ class SensorPolyfit(metaclass=Cached):
 
 if __name__ == '__main__':
     sp = SensorPolyfit()
-    #log.debug(sp.__hotdf__.columns.values)
+    log.debug(sp.__hotdf__.columns.values)
     #func = sp.__hotfuncdict__[-5]
     log.debug(sp.polyfit(6, 28, 30, 4.7))
 
