@@ -20,5 +20,7 @@ if __name__ == '__main__':
     log.debug(len(rdict.items()))
     log.debug(rdict)
     log.debug(json.dumps(rdict))
+    keylst = list(rdict.keys()).copy()
+    log.debug(keylst)
 
 
