@@ -16,7 +16,7 @@ from pydantic import BaseSettings, Field, validator, root_validator
 class AppSettings(BaseSettings):
     """项目配置"""
     APP_TITLE: str = 'MACDA'
-    APP_VERSION: str = '1.0911'
+    APP_VERSION: str = '1.2408'
     DEBUG: bool = Field(True, env='DEBUG')
     RUN_MODE: str = Field('Parse', env='RUN_MODE')
     DEV_MODE: bool = Field(True, env='DEV_MODE')
