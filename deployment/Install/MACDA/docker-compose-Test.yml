@@ -273,26 +273,6 @@ services:
       HASURA_GRAPHQL_METADATA_DEFAULTS: '{"backend_configs":{"dataconnector":{"athena":{"uri":"http://data-connector-agent:8081/api/v1/athena"},"mariadb":{"uri":"http://data-connector-agent:8081/api/v1/mariadb"},"mysql8":{"uri":"http://data-connector-agent:8081/api/v1/mysql"},"oracle":{"uri":"http://data-connector-agent:8081/api/v1/oracle"},"snowflake":{"uri":"http://data-connector-agent:8081/api/v1/snowflake"}}}}'
     networks:
       - macdanet
-  graphql-connector-agent:
-    image: harbor.naivehero.top/macda/graphql-data-connector:v2.40.0
-    container_name: graphql-connector-agent
-    hostname: graphql-connector-agent
-    restart: unless-stopped
-    #ports:
-    #  - 8081:8081
-    environment:
-      QUARKUS_LOG_LEVEL: ERROR # FATAL, ERROR, WARN, INFO, DEBUG, TRACE
-      ## https://quarkus.io/guides/opentelemetry#configuration-reference
-      QUARKUS_OPENTELEMETRY_ENABLED: "false"
-      ## QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/api/v1/athena/health"]
-      interval: 5s
-      timeout: 10s
-      retries: 5
-      start_period: 5s
-    networks:
-      - macdanet
   pgadmin:
     image: harbor.naivehero.top/macda/pgadmin4:8.10
     container_name: pgadmin
@@ -312,48 +292,6 @@ services:
     #    interval: 30s
     #    timeout: 5s
     #    retries: 5
-    networks:
-      - macdanet
-  macda1:
-    image: jointhero/macda:nb-v1.0911
-    container_name: macda1
-    hostname: macda1
-    restart: unless-stopped
-    volumes:
-      - "/data/MACDA/scripts/50_start_macda.sh:/etc/my_init.d/50_start_macda.sh"
-      - "/data/MACDA/macda/.env:/opt/MACDA/.env"
-    depends_on:
-      - mirror-maker
-    #ports:
-    #  - 6166:6166
-    networks:
-      - macdanet
-  macda2:
-    image: jointhero/macda:nb-v1.0911
-    container_name: macda2
-    hostname: macda2
-    restart: unless-stopped
-    volumes:
-      - "/data/MACDA/scripts/50_start_macda.sh:/etc/my_init.d/50_start_macda.sh"
-      - "/data/MACDA/macda/.env:/opt/MACDA/.env"
-    depends_on:
-      - mirror-maker
-    #ports:
-    #  - 6167:6166
-    networks:
-      - macdanet
-  macda3:
-    image: jointhero/macda:nb-v1.0911
-    container_name: macda3
-    hostname: macda3
-    restart: unless-stopped
-    volumes:
-      - "/data/MACDA/scripts/50_start_macda.sh:/etc/my_init.d/50_start_macda.sh"
-      - "/data/MACDA/macda/.env:/opt/MACDA/.env"
-    depends_on:
-      - mirror-maker
-    #ports:
-    #  - 6168:6166
     networks:
       - macdanet
   desktop:
@@ -376,6 +314,48 @@ services:
     volumes:
       - /data/MACDA/desktop/UserHome:/home/kasm-user/
       - /data/MACDA/desktop/UserData:/UserData
+    networks:
+      - macdanet
+  macda-Parse1:
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    container_name: macda-Parse1
+    hostname: macda-Parse1
+    restart: unless-stopped
+    volumes:
+      - "/data/MACDA/scripts/50_start_macda.sh:/etc/my_init.d/50_start_macda.sh"
+      - "/data/MACDA/macda/macda-parse/.env:/opt/MACDA/.env"
+    depends_on:
+      - mirror-maker
+    #ports:
+    #  - 6166:6166
+    networks:
+      - macdanet
+  macda-Store1:
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    container_name: macda-Store1
+    hostname: macda-Store1
+    restart: unless-stopped
+    volumes:
+      - "/data/MACDA/scripts/50_start_macda.sh:/etc/my_init.d/50_start_macda.sh"
+      - "/data/MACDA/macda/macda-store/.env:/opt/MACDA/.env"
+    depends_on:
+      - mirror-maker
+    #ports:
+    #  - 6166:6166
+    networks:
+      - macdanet
+  macda-Status1:
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    container_name: macda-Status1
+    hostname: macda-Status1
+    restart: unless-stopped
+    volumes:
+      - "/data/MACDA/scripts/50_start_macda.sh:/etc/my_init.d/50_start_macda.sh"
+      - "/data/MACDA/macda/macda-status/.env:/opt/MACDA/.env"
+    depends_on:
+      - mirror-maker
+    #ports:
+    #  - 6166:6166
     networks:
       - macdanet
 networks:
