@@ -324,6 +324,7 @@ services:
     volumes:
       - "/data/MACDA/scripts/50_start_macda.sh:/etc/my_init.d/50_start_macda.sh"
       - "/data/MACDA/macda/macda-parse/.env:/opt/MACDA/.env"
+      - "/data/MACDA/macda/logs/parse1/:/opt/MACDA/logs/"
     depends_on:
       - mirror-maker
     #ports:
@@ -338,6 +339,7 @@ services:
     volumes:
       - "/data/MACDA/scripts/50_start_macda.sh:/etc/my_init.d/50_start_macda.sh"
       - "/data/MACDA/macda/macda-store/.env:/opt/MACDA/.env"
+      - "/data/MACDA/macda/logs/store1/:/opt/MACDA/logs/"
     depends_on:
       - mirror-maker
     #ports:
@@ -352,6 +354,7 @@ services:
     volumes:
       - "/data/MACDA/scripts/50_start_macda.sh:/etc/my_init.d/50_start_macda.sh"
       - "/data/MACDA/macda/macda-status/.env:/opt/MACDA/.env"
+      - "/data/MACDA/macda/logs/status1/:/opt/MACDA/logs/"
     depends_on:
       - mirror-maker
     #ports:
