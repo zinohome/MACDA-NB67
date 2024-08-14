@@ -363,7 +363,7 @@ services:
     hostname: macdaweb
     ports:
     - 30080:80/tcp
-    image: macdaweb-nb67:v1.0
+    image: harbor.naivehero.top/macda/macdaweb-nb67:v1.0
     restart: unless-stopped
     volumes:
       - "/data/MACDA/web/default.conf:/etc/nginx/conf.d/default.conf"
