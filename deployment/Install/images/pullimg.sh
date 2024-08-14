@@ -12,4 +12,5 @@ docker pull harbor.naivehero.top/macda/timescaledb-ha:pg14-latest && \
 docker pull harbor.naivehero.top/macda/graphql-engine:v2.40.0 && \
 docker pull harbor.naivehero.top/macda/pgadmin4:8.10 && \
 docker pull harbor.naivehero.top/macda/macda:nb67-v1.2408 && \
-docker pull harbor.naivehero.top/kasmweb/kasm-desktop-focal-web:1.12.1
+docker pull harbor.naivehero.top/kasmweb/kasm-desktop-focal-web:1.12.1 && \
+docker pull harbor.naivehero.top/macda/macdaweb-nb67:v1.0

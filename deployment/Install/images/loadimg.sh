@@ -12,4 +12,5 @@ docker load -i kafka-ui.tar.gz && \
 docker load -i passenger.tar.gz && \
 docker load -i kafka-connect.tar.gz && \
 docker load -i redpanda-console.tar.gz && \
-docker load -i redpanda.tar.gz
+docker load -i redpanda.tar.gz && \
+docker load -i macdaweb.tar.gz

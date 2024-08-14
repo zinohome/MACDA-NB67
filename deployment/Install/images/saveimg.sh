@@ -27,5 +27,7 @@ gzip pgadmin4.tar && \
 docker save -o macda-nb.tar harbor.naivehero.top/macda/macda:nb67-v1.2408 && \
 gzip macda-nb.tar && \
 docker save -o desktop.tar harbor.naivehero.top/kasmweb/kasm-desktop-focal-web:1.12.1 && \
-gzip desktop.tar
+gzip desktop.tar  && \
+docker save -o macdaweb.tar harbor.naivehero.top/macda/macdaweb-nb67:v1.0  && \
+gzip macdaweb.tar
 
