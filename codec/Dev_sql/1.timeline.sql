@@ -1,3 +1,9 @@
+CREATE TABLE IF NOT EXISTS public.refresh_view
+(
+    refresh_view text COLLATE pg_catalog."default"
+)
+TABLESPACE pg_default;
+
 DROP TRIGGER IF EXISTS refresh_view_trigger ON public.refresh_view;
 DROP FUNCTION IF EXISTS public.refresh_view_func();
 
