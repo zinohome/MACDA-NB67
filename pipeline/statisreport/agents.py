@@ -52,7 +52,8 @@ async def on_started():
                 train_no = dvc_no_list[1]
                 carbin_no = dvc_no_list[2]
                 trainNo = f"0{line_no}0{str(train_no).zfill(2)}"
-                partCodepre = f"0{line_no}0{str(int(carbin_no) - 1).zfill(2)}"
+                #partCodepre = f"0{line_no}0{str(int(carbin_no) - 1).zfill(2)}"
+                partCodepre = f"500"
                 # log.debug('line_no: %s, train_no: %s, carbin_no: %s' % (line_no, train_no, carbin_no))
                 for code in au.partcodefield:
                     sdata = {}
