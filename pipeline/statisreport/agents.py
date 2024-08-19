@@ -62,7 +62,7 @@ async def on_started():
                         sdata['line_name'] = '3S'
                     if "5" in sdata['line_name']:
                         sdata['line_name'] = '5'
-                    sdata['trainType'] = 'B2'
+                    sdata['trainType'] = 'B'
                     sdata['trainNo'] = trainNo
                     sdata['partCode'] = str(au.getvalue('partcode', code, 'part_code')).replace('500', partCodepre)
                     if 'rad' in code or 'fad' in code:

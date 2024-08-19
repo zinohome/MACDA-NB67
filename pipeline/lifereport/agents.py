@@ -66,7 +66,7 @@ async def life_report():
                         sdata['lineName'] = '3S'
                     if "5" in line_name:
                         sdata['lineName'] = '5'
-                    sdata['trainType'] = 'B2'
+                    sdata['trainType'] = 'B'
                     sdata['trainNo'] = trainNo
                     sdata['partCode'] = str(au.getvalue('partcode', code.lower(), 'part_code')).replace('500', partCodepre)
                     sdata['serviceTime'] = int(round(time.time() * 1000))

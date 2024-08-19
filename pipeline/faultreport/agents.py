@@ -48,7 +48,7 @@ async def on_started():
                     if item[field] > 0:
                         pdata = {}
                         pdata['message_type'] = '1'
-                        pdata['train_type'] = 'B2'
+                        pdata['train_type'] = 'B'
                         pdata['train_no'] = trainNo
                         pdata['line_name'] = str(line_no).replace(" ", "")
                         if "3" in pdata['line_name']:
@@ -87,7 +87,7 @@ async def on_started():
                     if item[f"dvc_{field}"] > 0:
                         fdata = {}
                         fdata['message_type'] = '1'
-                        fdata['train_type'] = 'B2'
+                        fdata['train_type'] = 'B'
                         fdata['train_no'] = trainNo
                         fdata['line_name'] = str(line_no).replace(" ", "")
                         if "3" in fdata['line_name']:
