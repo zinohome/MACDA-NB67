@@ -18,10 +18,10 @@ services:
     - --advertise-pandaproxy-addr PLAINTEXT://redpanda:28082,OUTSIDE://192.168.32.17:8082
     volumes:
       - "/data/MACDA/redpanda/data:/var/lib/redpanda/data"
-    #ports:
+    ports:
     #  - 8081:8081
     #  - 8082:8082
-    #  - 9092:9092
+      - 9092:9092
     #  - 9644:9644
     #  - 28082:28082
     #  - 29092:29092
