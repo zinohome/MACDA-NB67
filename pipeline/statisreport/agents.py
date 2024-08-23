@@ -79,6 +79,8 @@ async def on_started():
                     else:
                         sdata['serviceValue'] = 0
                         sdata['mileage'] = int(item[f"dvc_{code}"])
+                    sdata['useTime'] = 0
+                    sdata['flag'] = 0
                     statis_data_list.append(sdata)
     log.debug('statis_data_list is : %s' % statis_data_list)
     au.send_statistics(statis_data_list)
