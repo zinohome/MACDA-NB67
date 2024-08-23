@@ -266,9 +266,9 @@ if __name__ == '__main__':
     log.debug(au.__partcode__)
     pdf = au.__partcode__
     log.debug(pdf.columns.values)
-    row2 = pdf.loc[pdf['name'] == 'dwOPTime_Comp_U12']
+    row2 = pdf.loc[pdf['name'] == 'dwoptime_comp_u12']
     log.debug(row2['part_code'])
-    log.debug(dir(row2['part_code']))
-    log.debug(row2['part_code'].values[0])
+    #log.debug(dir(row2['part_code']))
+    log.debug(row2['part_code'].values)
     log.debug('this is the value : %s' % row2['part_code'].values[0])
     '''
