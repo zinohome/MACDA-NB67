@@ -51,23 +51,36 @@ async def on_started():
                         pdata['train_type'] = 'B'
                         pdata['train_no'] = trainNo
                         pdata['line_name'] = str(line_no).replace(" ", "")
-                        if "3" in pdata['line_name']:
-                            pdata['line_name'] = '3S'
-                        if "5" in pdata['line_name']:
-                            pdata['line_name'] = '5'
                         pdata['coach'] = coachdict[carbin_no]
                         pdata['location'] = au.getvalue('alertcode',field,'location')
                         pdata['code'] = au.getvalue('alertcode',field,'code').replace('HVAC1',f"HVAC{carbin_no}")
                         pdata['station1'] = str(au.getvalue('alertcode',field,'station1'))
                         pdata['station2'] = str(au.getvalue('alertcode',field,'station2'))
                         pdata['subsystem'] = str(au.getvalue('alertcode',field,'subsystem'))
-                        pdata['subsystem'] = str(au.getvalue('alertcode',field,'subsystem'))
                         #pdata['starttime'] = item['time'].strftime("%Y-%m-%d %H:%M:%S")
                         pdata['starttime'] = str(int(time.mktime(time.strptime(item['time'].strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S"))))
                         #pdata['endtime'] = '0'
                         pdata['endtime'] = 0
                         predict_data_list.append(pdata)
-    #log.debug('predict_data_list is : %s' % predict_data_list)
+    else:
+        log.debug("No Predict Data, Below is Only for Test")
+        if dev_mode:
+            pdata = {}
+            pdata['message_type'] = '1'
+            pdata['train_type'] = 'B'
+            pdata['train_no'] = '7002'
+            pdata['line_name'] = '7'
+            pdata['coach'] = 'M1'
+            pdata['location'] = '机组1制冷系统'
+            pdata['code'] = 'HVAC305'
+            pdata['station1'] = '1'
+            pdata['station2'] = '1'
+            pdata['subsystem'] = '5'
+            pdata['starttime'] = str(int(time.mktime(time.strptime(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), "%Y-%m-%d %H:%M:%S"))))
+            # pdata['endtime'] = '0'
+            pdata['endtime'] = 0
+            predict_data_list.append(pdata)
+    log.debug('predict_data_list is : %s' % predict_data_list)
     au.send_predict(predict_data_list)
     # Generata fault data
     fault_data_list = []
@@ -86,7 +99,7 @@ async def on_started():
                 for field in au.alertfield:
                     if item[f"dvc_{field}"] > 0:
                         fdata = {}
-                        fdata['message_type'] = '1'
+                        fdata['message_type'] = '0'
                         fdata['train_type'] = 'B'
                         fdata['train_no'] = trainNo
                         fdata['line_name'] = str(line_no).replace(" ", "")
@@ -96,11 +109,10 @@ async def on_started():
                         fdata['station1'] = str(au.getvalue('alertcode', field, 'station1'))
                         fdata['station2'] = str(au.getvalue('alertcode', field, 'station2'))
                         fdata['subsystem'] = str(au.getvalue('alertcode', field, 'subsystem'))
-                        fdata['subsystem'] = str(au.getvalue('alertcode', field, 'subsystem'))
                         #fdata['starttime'] = item['time'].strftime("%Y-%m-%d %H:%M:%S")
                         fdata['starttime'] = str(int(time.mktime(time.strptime(item['time'].strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S"))))
                         #fdata['endtime'] = '0'
                         fdata['endtime'] = 0
                         fault_data_list.append(fdata)
-    #log.debug('fault_data_list is : %s' % fault_data_list)
+    log.debug('fault_data_list is : %s' % fault_data_list)
     au.send_predict(fault_data_list)

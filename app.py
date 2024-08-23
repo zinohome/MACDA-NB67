@@ -40,8 +40,8 @@ elif run_mode.strip().lower() == 'store':
 else:
     # run predict
     #app.discover('pipeline.status','pipeline.lifereport','pipeline.predict', 'pipeline.faultreport')
-    app.discover('pipeline.status','pipeline.lifereport','pipeline.statisreport')
-    #app.discover('pipeline.predict', 'pipeline.faultreport')
+    #app.discover('pipeline.status','pipeline.lifereport')
+    app.discover('pipeline.predict', 'pipeline.faultreport')
 
     #app.discover('pipeline.predict', 'pipeline.faultreport','pipeline.statisreport')
 #app.discover('pipeline.batchparse','pipeline.batchstore','pipeline.predict','pipeline.faultreport','pipeline.statisreport')
