@@ -55,23 +55,18 @@ async def life_report():
                 line_no = dvc_no_list[0]
                 train_no = dvc_no_list[1]
                 carbin_no = dvc_no_list[2]
-                trainNo = f"0{line_no}0{str(train_no).zfill(2)}"
-                #partCodepre = f"0{line_no}0{str(int(carbin_no) - 1).zfill(2)}"
-                partCodepre = f"500"
+                trainNo = f"{line_no}{str(train_no).zfill(3)}"
+                partCodepre = f"5{str(int(carbin_no))}"
                 log.debug('line_no: %s, train_no: %s, carbin_no: %s' % (line_no, train_no, carbin_no))
                 for code in au.partcodefield:
                     sdata = {}
                     line_name = str(line_no).replace(" ", "")
                     sdata['lineName'] = line_name
-                    if "3" in line_name:
-                        sdata['lineName'] = '3S'
-                    if "5" in line_name:
-                        sdata['lineName'] = '5'
                     sdata['trainType'] = 'B'
                     sdata['trainNo'] = trainNo
-                    sdata['partCode'] = str(au.getvalue('partcode', code.lower(), 'part_code')).replace('500', partCodepre)
+                    sdata['partCode'] = str(au.getvalue('partcode', code.lower(), 'part_code')).replace('50', partCodepre)
                     sdata['serviceTime'] = int(round(time.time() * 1000))
-                    if 'rad' in code or 'fad' in code:
+                    if 'rad' in code or 'fad' in code or 'dmpexu' in code :
                         sdata['serviceValue'] = item[f"dvc_{code}"]
                     else:
                         sdata['serviceValue'] = 0
@@ -79,5 +74,5 @@ async def life_report():
                     sdata['useTime'] = 0
                     sdata['flag'] = 0
                     life_data_list.append(sdata)
-    #log.debug('life_data_list is : %s' % life_data_list)
+    log.debug('life_data_list is : %s' % life_data_list)
     au.send_lifereport(life_data_list)

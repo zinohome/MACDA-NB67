@@ -81,7 +81,7 @@ async def on_started():
                 line_no = dvc_no_list[0]
                 train_no = dvc_no_list[1]
                 carbin_no = dvc_no_list[2]
-                trainNo = f"0{line_no}0{str(train_no).zfill(2)}"
+                trainNo = f"{line_no}{str(train_no).zfill(3)}"
                 # log.debug('line_no: %s, train_no: %s, carbin_no: %s' % (line_no, train_no, carbin_no))
                 for field in au.alertfield:
                     if item[f"dvc_{field}"] > 0:
@@ -90,10 +90,6 @@ async def on_started():
                         fdata['train_type'] = 'B'
                         fdata['train_no'] = trainNo
                         fdata['line_name'] = str(line_no).replace(" ", "")
-                        if "3" in fdata['line_name']:
-                            fdata['line_name'] = '3S'
-                        if "5" in fdata['line_name']:
-                            fdata['line_name'] = '5'
                         fdata['coach'] = coachdict[carbin_no]
                         fdata['location'] = au.getvalue('alertcode', field, 'location')
                         fdata['code'] = au.getvalue('alertcode', field, 'code').replace('HVAC1', f"HVAC{carbin_no}")

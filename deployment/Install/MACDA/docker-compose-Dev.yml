@@ -233,8 +233,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: "passw0rd"
-    #ports:
-    #  - 5432:5432
+    ports:
+      - 5432:5432
     volumes:
       - "/data/MACDA/timescaledb/data:/home/postgres/pgdata"
     #healthcheck:
