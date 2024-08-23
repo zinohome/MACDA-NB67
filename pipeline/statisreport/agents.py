@@ -42,6 +42,9 @@ async def on_started():
     else:
         statis_data = tu.get_statis_data('pro')
     # Generata statis data
+    # Generata statis data
+    log.debug('===============')
+    log.debug(statis_data)
     statis_data_list = []
     if statis_data['len'] > 0:
         for item in statis_data['data']:

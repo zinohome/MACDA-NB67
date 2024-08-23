@@ -44,8 +44,8 @@ async def life_report():
     else:
         statis_data = tu.get_statis_data('pro')
     # Generata statis data
-    #log.debug('===============')
-    #log.debug(statis_data)
+    log.debug('===============')
+    log.debug(statis_data)
     life_data_list = []
     if statis_data['len'] > 0:
         for item in statis_data['data']:
