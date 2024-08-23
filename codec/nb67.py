@@ -339,6 +339,11 @@ class Nb67(KaitaiStruct):
     def from_file_to_dict(binfile):
         dev_mode = settings.DEV_MODE
         nb67dict = Nb67.from_file(binfile).__dict__.copy()
+        lineno = int(str(nb67dict['dvc_train_no'])[:-3])
+        trainno = int(str(nb67dict['dvc_train_no'])[-3:])
+        nb67dict['msg_calc_train_no'] = f"{str(lineno)}{str(trainno).zfill(3)}{str(nb67dict['dvc_carriage_no']).zfill(2)}"
+        nb67dict['msg_calc_dvc_no'] = f"{str(lineno)}{str(trainno).zfill(3)}"
+        '''
         if dev_mode:
             nb67dict[
                 'msg_calc_dvc_no'] = f"0{nb67dict['msg_line_no']}0{str(nb67dict['msg_train_no']).zfill(2)}0{nb67dict['msg_carriage_no']}"
@@ -349,6 +354,7 @@ class Nb67(KaitaiStruct):
                 'msg_calc_dvc_no'] = f"{str(nb67dict['msg_train_no']).zfill(5)}0{nb67dict['msg_carriage_no']}"
             nb67dict[
                 'msg_calc_train_no'] = f"{str(nb67dict['msg_train_no']).zfill(5)}"
+        '''
         nb67dict[
             'msg_calc_dvc_time'] = f"20{nb67dict['msg_src_dvc_year']}-{nb67dict['msg_src_dvc_month']}-{nb67dict['msg_src_dvc_day']} {nb67dict['msg_src_dvc_hour']}:{nb67dict['msg_src_dvc_minute']}:{nb67dict['msg_src_dvc_second']}"
         nb67dict['msg_calc_parse_time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -384,6 +390,11 @@ class Nb67(KaitaiStruct):
     def from_bytes_to_dict(bytesobj):
         dev_mode = settings.DEV_MODE
         nb67dict = Nb67.from_bytes(bytesobj).__dict__.copy()
+        lineno = int(str(nb67dict['dvc_train_no'])[:-3])
+        trainno = int(str(nb67dict['dvc_train_no'])[-3:])
+        nb67dict['msg_calc_train_no'] = f"{str(lineno)}{str(trainno).zfill(3)}{str(nb67dict['dvc_carriage_no']).zfill(2)}"
+        nb67dict['msg_calc_dvc_no'] = f"{str(lineno)}{str(trainno).zfill(3)}"
+        '''
         if dev_mode:
             nb67dict[
                 'msg_calc_dvc_no'] = f"0{nb67dict['msg_line_no']}0{str(nb67dict['msg_train_no']).zfill(2)}0{nb67dict['msg_carriage_no']}"
@@ -394,6 +405,7 @@ class Nb67(KaitaiStruct):
                 'msg_calc_dvc_no'] = f"{str(nb67dict['msg_train_no']).zfill(5)}0{nb67dict['msg_carriage_no']}"
             nb67dict[
                 'msg_calc_train_no'] = f"{str(nb67dict['msg_train_no']).zfill(5)}"
+        '''
         nb67dict[
             'msg_calc_dvc_time'] = f"20{nb67dict['msg_src_dvc_year']}-{nb67dict['msg_src_dvc_month']}-{nb67dict['msg_src_dvc_day']} {nb67dict['msg_src_dvc_hour']}:{nb67dict['msg_src_dvc_minute']}:{nb67dict['msg_src_dvc_second']}"
         nb67dict['msg_calc_parse_time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
