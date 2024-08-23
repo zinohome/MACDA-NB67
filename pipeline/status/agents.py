@@ -34,4 +34,5 @@ async def on_started():
     status['time'] = str(current_time_milliseconds)
     statuslist = []
     statuslist.append(status)
+    log.debug('status_data_list is : %s' % statuslist)
     au.send_status(statuslist)
