@@ -74,11 +74,11 @@ async def on_started():
                         sdata['serviceValue'] = 0
                     '''
                     if 'rad' in code or 'fad' in code or 'dmpexu' in code :
+                        sdata['serviceValue'] = int(item[f"dvc_{code}"])
                         sdata['mileage'] = 0
-                        sdata['serviceValue'] = item[f"dvc_{code}"]
                     else:
-                        sdata['mileage'] = item[f"dvc_{code}"]
                         sdata['serviceValue'] = 0
+                        sdata['mileage'] = int(item[f"dvc_{code}"])
                     statis_data_list.append(sdata)
     log.debug('statis_data_list is : %s' % statis_data_list)
     au.send_statistics(statis_data_list)

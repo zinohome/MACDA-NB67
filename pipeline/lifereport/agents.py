@@ -75,11 +75,11 @@ async def life_report():
                         sdata['serviceValue'] = 0
                     '''
                     if 'rad' in code or 'fad' in code or 'dmpexu' in code :
+                        sdata['serviceValue'] = int(item[f"dvc_{code}"])
                         sdata['mileage'] = 0
-                        sdata['serviceValue'] = item[f"dvc_{code}"]
                     else:
-                        sdata['mileage'] = item[f"dvc_{code}"]
                         sdata['serviceValue'] = 0
+                        sdata['mileage'] = int(item[f"dvc_{code}"])
                     sdata['useTime'] = 0
                     sdata['flag'] = 0
                     life_data_list.append(sdata)
