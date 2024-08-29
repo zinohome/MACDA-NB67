@@ -42,7 +42,8 @@ async def on_started():
                 line_no = dvc_no_list[0]
                 train_no = dvc_no_list[1]
                 carbin_no = dvc_no_list[2]
-                trainNo = f"0{line_no}0{str(train_no).zfill(2)}"
+                #trainNo = f"0{line_no}0{str(train_no).zfill(2)}"
+                trainNo = f"{str(line_no).zfill(2)}{str(train_no).zfill(3)}"
                 #log.debug('line_no: %s, train_no: %s, carbin_no: %s' % (line_no, train_no, carbin_no))
                 for field in au.predictfield:
                     if item[field] > 0:
@@ -68,7 +69,7 @@ async def on_started():
             pdata = {}
             pdata['message_type'] = '1'
             pdata['train_type'] = 'B'
-            pdata['train_no'] = '7002'
+            pdata['train_no'] = '07002'
             pdata['line_name'] = '7'
             pdata['coach'] = 'M1'
             pdata['location'] = '机组1制冷系统'
@@ -94,7 +95,7 @@ async def on_started():
                 line_no = dvc_no_list[0]
                 train_no = dvc_no_list[1]
                 carbin_no = dvc_no_list[2]
-                trainNo = f"{line_no}{str(train_no).zfill(3)}"
+                trainNo = f"{str(line_no).zfill(2)}{str(train_no).zfill(3)}"
                 # log.debug('line_no: %s, train_no: %s, carbin_no: %s' % (line_no, train_no, carbin_no))
                 for field in au.alertfield:
                     if item[f"dvc_{field}"] > 0:
