@@ -7,6 +7,7 @@
 #  @Author  : Zhang Jun
 #  @Email   : ibmzhangjun@139.com
 #  @Software: MACDA
+import datetime
 
 from app import app
 from core.settings import settings
@@ -64,7 +65,7 @@ async def on_started():
                     sdata['trainType'] = 'B'
                     sdata['trainNo'] = trainNo
                     sdata['partCode'] = str(au.getvalue('partcode', code.lower(), 'part_code')).replace('50', partCodepre)
-                    sdata['serviceTime'] = int(round(time.time() * 1000))
+                    sdata['serviceTime'] = int(datetime.now().timestamp() * 1000)
                     '''
                     if 'rad' in code or 'fad' in code or 'dmpexu' in code :
                         sdata['serviceTime'] = 0

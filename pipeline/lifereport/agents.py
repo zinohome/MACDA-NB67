@@ -7,6 +7,8 @@
 #  @Author  : Zhang Jun
 #  @Email   : ibmzhangjun@139.com
 #  @Software: MACDA
+import datetime
+
 import pytz
 
 from app import app
@@ -65,7 +67,7 @@ async def life_report():
                     sdata['trainType'] = 'B'
                     sdata['trainNo'] = trainNo
                     sdata['partCode'] = str(au.getvalue('partcode', code.lower(), 'part_code')).replace('50', partCodepre)
-                    sdata['serviceTime'] = int(round(time.time() * 1000))
+                    sdata['serviceTime'] = int(datetime.now().timestamp() * 1000)
                     '''
                     if 'rad' in code or 'fad' in code or 'dmpexu' in code :
                         sdata['serviceTime'] = 0
