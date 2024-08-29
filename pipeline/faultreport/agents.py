@@ -42,7 +42,6 @@ async def on_started():
                 line_no = dvc_no_list[0]
                 train_no = dvc_no_list[1]
                 carbin_no = dvc_no_list[2]
-                #trainNo = f"0{line_no}0{str(train_no).zfill(2)}"
                 trainNo = f"{str(line_no).zfill(2)}{str(train_no).zfill(3)}"
                 #log.debug('line_no: %s, train_no: %s, carbin_no: %s' % (line_no, train_no, carbin_no))
                 for field in au.predictfield:
