@@ -2,7 +2,7 @@ version: '3.7'
 services:
   redpanda:
     # NOTE: Please use the latest version here!
-    image: harbor.naivehero.top/macda/redpanda:v24.2.1
+    image: harbor.naivehero.top/macda/redpanda:v24.2.6
     container_name: redpanda
     hostname: redpanda
     restart: unless-stopped
@@ -33,7 +33,7 @@ services:
     networks:
       - macdanet
   redpanda-console:
-    image: harbor.naivehero.top/macda/redpanda-console:v2.7.0
+    image: harbor.naivehero.top/macda/redpanda-console:v2.7.2
     container_name: redpanda-console
     hostname: redpanda-console
     restart: unless-stopped
