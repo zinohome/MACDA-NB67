@@ -143,7 +143,7 @@ services:
       - macdanet
   mock-desktop:
     # latest, slim, full
-    image: harbor.naivehero.top/kasmweb/kasm-desktop-focal-web:1.12.1
+    image: harbor.naivehero.top/kasmweb/ubuntu-noble-desktop-ime:1.16.0
     container_name: mock-desktop
     hostname: mock-desktop
     restart: unless-stopped
