@@ -478,6 +478,7 @@ class TSutil(metaclass=Cached):
             log.debug(querysql_20m)
             log.debug(querysql_30m)
             returndata = {}
+            returndata['len'] = 0
             conn = self.conn_pool.getconn()
             cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
             #query 3m
@@ -488,6 +489,7 @@ class TSutil(metaclass=Cached):
             rdata['len'] = rlen
             if rlen >= 1:
                 rdata['data'] = result[0]
+                returndata['len'] += 1
             else:
                 rdata['data'] = None
             returndata['data3m'] = rdata
@@ -499,6 +501,7 @@ class TSutil(metaclass=Cached):
             rdata['len'] = rlen
             if rlen >= 1:
                 rdata['data'] = result[0]
+                returndata['len'] += 1
             else:
                 rdata['data'] = None
             returndata['data5m'] = rdata
@@ -510,6 +513,7 @@ class TSutil(metaclass=Cached):
             rdata['len'] = rlen
             if rlen >= 1:
                 rdata['data'] = result[0]
+                returndata['len'] += 1
             else:
                 rdata['data'] = None
             returndata['data10m'] = rdata
@@ -521,6 +525,7 @@ class TSutil(metaclass=Cached):
             rdata['len'] = rlen
             if rlen >= 1:
                 rdata['data'] = result[0]
+                returndata['len'] += 1
             else:
                 rdata['data'] = None
             returndata['data15m'] = rdata
@@ -532,6 +537,7 @@ class TSutil(metaclass=Cached):
             rdata['len'] = rlen
             if rlen >= 1:
                 rdata['data'] = result[0]
+                returndata['len'] += 1
             else:
                 rdata['data'] = None
             returndata['data20m'] = rdata
@@ -543,6 +549,7 @@ class TSutil(metaclass=Cached):
             rdata['len'] = rlen
             if rlen >= 1:
                 rdata['data'] = result[0]
+                returndata['len'] += 1
             else:
                 rdata['data'] = None
             returndata['data30m'] = rdata
@@ -553,6 +560,67 @@ class TSutil(metaclass=Cached):
         except Exception as exp:
             log.error('Exception at tsutil.prepare_predictdata() %s ' % exp)
             traceback.print_exc()
+
+    def predict(self, mode, dvc_no):
+        predictdata = self.prepare_predictdata(mode, dvc_no)
+        log.debug(predictdata)
+        if predictdata['len'] == 6:
+            predictsave = 0
+            log.debug('Get Predict Data ... Success !')
+            # ref leak predict 冷媒泄露预警
+            ref_leak_u11 = 0
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 2 or round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) ==3) and (round(predictdata['data5m']['data']['f_cp_u11'])>30 and round(predictdata['data5m']['data']['suckp_u11'])<2) :
+                ref_leak_u11 = 1
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 1) and (round(predictdata['data15m']['data']['highpress_u11'])<5) :
+                ref_leak_u11 = 1
+            ref_leak_u12 = 0
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 2 or round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) ==3) and (round(predictdata['data5m']['data']['f_cp_u12'])>30 and round(predictdata['data5m']['data']['suckp_u12'])<2) :
+                ref_leak_u12 = 1
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 1) and (round(predictdata['data15m']['data']['highpress_u12'])<5) :
+                ref_leak_u12 = 1
+            ref_leak_u21 = 0
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 2 or round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) ==3) and (round(predictdata['data5m']['data']['f_cp_u21'])>30 and round(predictdata['data5m']['data']['suckp_u21'])<2) :
+                ref_leak_u21 = 1
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 1) and (round(predictdata['data15m']['data']['highpress_u21'])<5) :
+                ref_leak_u21 = 1
+            ref_leak_u22 = 0
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 2 or round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) ==3) and (round(predictdata['data5m']['data']['f_cp_u22'])>30 and round(predictdata['data5m']['data']['suckp_u22'])<2) :
+                ref_leak_u22 = 1
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 1) and (round(predictdata['data15m']['data']['highpress_u22'])<5) :
+                ref_leak_u22 = 1
+
+            # f_cp predict 制冷系统预警
+            f_cp_u1 = 0
+            if (round(predictdata['data3m']['data']['f_cp_u11']) == round(predictdata['data3m']['data']['f_cp_u12'])) and (round(predictdata['data3m']['data']['w_crntu1_sub'],1) > 2):
+                f_cp_u1 = 1
+            if (round(predictdata['data10m']['data']['sp_u11'],1) > 20 or round(predictdata['data10m']['data']['sp_u11'],1) < -8 or round(predictdata['data10m']['data']['sp_u12'],1) > 20 or round(predictdata['data10m']['data']['sp_u12'],1) < -8):
+                f_cp_u1 = 1
+            f_cp_u2 = 0
+            if (round(predictdata['data3m']['data']['f_cp_u21']) == round(predictdata['data3m']['data']['f_cp_u22'])) and (round(predictdata['data3m']['data']['w_crntu2_sub'],1) > 2):
+                f_cp_u2 = 1
+            if (round(predictdata['data10m']['data']['sp_u21'],1) > 20 or round(predictdata['data10m']['data']['sp_u21'],1) < -8 or round(predictdata['data10m']['data']['sp_u22'],1) > 20 or round(predictdata['data10m']['data']['sp_u22'],1) < -8):
+                f_cp_u2 = 1
+
+            # fas & ras predict 新风温度传感器 & 回风温度传感器 预警
+            f_fas = 0
+            if round(predictdata['data5m']['data']['fas_sub'],1) > 8 :
+                f_fas = 1
+            f_ras = 0
+            if round(predictdata['data5m']['data']['ras_sub'], 1) > 8:
+                f_ras = 1
+
+            #cabin_overtemp predict 车厢温度超温预警
+            cabin_overtemp = 0
+            if round(predictdata['data20m']['data']['bflt_tempover'],1) > 0:
+                cabin_overtemp = 1
+
+
+
+            log.debug(predictdata['data20m']['data']['bflt_tempover'])
+
+            predictsave = f"{ref_leak_u11}{ref_leak_u12}{ref_leak_u21}{ref_leak_u22}{f_cp_u1}{f_cp_u2}{f_fas}{f_ras}{cabin_overtemp}"
+            log.debug(predictsave)
+
 
     def insert_predictdata(self, tablename, jsonobj):
         keylst = []
@@ -590,8 +658,7 @@ class TSutil(metaclass=Cached):
 
 if __name__ == '__main__':
     tu = TSutil()
-    rdata = tu.prepare_predictdata('dev', '700203')
-    log.debug(rdata)
+    tu.predict('dev', '700203')
     '''
     tu = TSutil()
     jobj = {"schema":"s1","playload":"p1"}
