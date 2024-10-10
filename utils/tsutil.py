@@ -636,11 +636,51 @@ class TSutil(metaclass=Cached):
             if round(predictdata['data10m']['data']['cfbk_ef_u21']) == 1 and round(predictdata['data10m']['data']['i_ef_u22'],1) > 2:
                 f_ef_u22 = 1
 
-            log.debug(predictdata['data10m']['data']['cfbk_ef_u21'])
-            log.debug(predictdata['data10m']['data']['i_ef_u22'])
+            #f_cf predict 冷凝风机电流预警
+            f_cf_u11 = 0
+            if round(predictdata['data10m']['data']['cfbk_cf_u11']) == 1 and round(
+                    predictdata['data10m']['data']['i_cf_u11'], 1) > 2.9:
+                f_cf_u11 = 1
+            f_cf_u12 = 0
+            if round(predictdata['data10m']['data']['cfbk_cf_u11']) == 1 and round(
+                    predictdata['data10m']['data']['i_cf_u12'], 1) > 2.9:
+                f_cf_u12 = 1
+            f_cf_u21 = 0
+            if round(predictdata['data10m']['data']['cfbk_cf_u21']) == 1 and round(
+                    predictdata['data10m']['data']['i_cf_u21'], 1) > 2.9:
+                f_cf_u21 = 1
+            f_cf_u22 = 0
+            if round(predictdata['data10m']['data']['cfbk_cf_u21']) == 1 and round(
+                    predictdata['data10m']['data']['i_cf_u22'], 1) > 2.9:
+                f_cf_u22 = 1
+
+            # f_exufan predict 废排风机电流预警
+            f_exufan = 0
+            if round(predictdata['data10m']['data']['cfbk_exufan'] ==1) and round(predictdata['data10m']['data']['i_exufan'],1) > 4:
+                f_exufan = 1
+
+            # f_fas predict 压缩机电流预警
+            f_fas_u11 = 0
+            if round(predictdata['data10m']['data']['fas_u1'],1) < 35 and round(predictdata['data10m']['data']['i_cp_u11'],1) > 18:
+                f_fas_u11 = 1
+            f_fas_u21 = 0
+            if round(predictdata['data10m']['data']['fas_u1'],1) < 35 and round(predictdata['data10m']['data']['i_cp_u12'],1) > 18:
+                f_fas_u21 = 1
+            f_fas_u12 = 0
+            if round(predictdata['data10m']['data']['fas_u2'],1) < 35 and round(predictdata['data10m']['data']['i_cp_u21'],1) > 18:
+                f_fas_u12 = 1
+            f_fas_u22 = 0
+            if round(predictdata['data10m']['data']['fas_u2'],1) < 35 and round(predictdata['data10m']['data']['i_cp_u22'],1) > 18:
+                f_fas_u22 = 1
+
+
+            log.debug(predictdata['data10m']['data']['fas_u1'])
+            log.debug(predictdata['data10m']['data']['i_cp_u11'])
+            log.debug(predictdata['data10m']['data']['fas_u2'])
+            log.debug(predictdata['data10m']['data']['i_cp_u21'])
 
             predictsave = (f"{ref_leak_u11}{ref_leak_u12}{ref_leak_u21}{ref_leak_u22}{f_cp_u1}{f_cp_u2}{f_fas}{f_ras}{cabin_overtemp}{f_presdiff_u1}{f_presdiff_u2}"
-                           f"{f_ef_u11}{f_ef_u12}{f_ef_u21}{f_ef_u22}")
+                           f"{f_ef_u11}{f_ef_u12}{f_ef_u21}{f_ef_u22}{f_cf_u11}{f_cf_u12}{f_cf_u21}{f_cf_u22}{f_exufan}{f_fas_u11}{f_fas_u12}{f_fas_u21}{f_fas_u22}")
             log.debug(predictsave)
 
 
