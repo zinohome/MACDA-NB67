@@ -384,7 +384,6 @@ class TSutil(metaclass=Cached):
             traceback.print_exc()
 
     def prepare_predictdata(self, mode, dvc_no):
-        querysql = ''
         querysql_3m = ''
         querysql_5m = ''
         querysql_10m = ''
@@ -392,13 +391,6 @@ class TSutil(metaclass=Cached):
         querysql_20m = ''
         querysql_30m = ''
         if mode == 'dev':
-            querysql = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
-                       f"approx_percentile(0.95, percentile_agg(f_cp_u11)) as f_cp_u11, approx_percentile(0.95, percentile_agg(f_cp_u12)) as f_cp_u12, approx_percentile(0.95, percentile_agg(f_cp_u21)) as f_cp_u21, approx_percentile(0.95, percentile_agg(f_cp_u22)) as f_cp_u22, " \
-                       f"approx_percentile(0.95, percentile_agg(suckp_u11)) as suckp_u11, approx_percentile(0.95, percentile_agg(suckp_u12)) as suckp_u12, approx_percentile(0.95, percentile_agg(suckp_u21)) as suckp_u21, approx_percentile(0.95, percentile_agg(suckp_u22)) as suckp_u22, " \
-                       f"approx_percentile(0.95, percentile_agg(highpress_u11)) as highpress_u11, approx_percentile(0.95, percentile_agg(highpress_u12)) as highpress_u12, approx_percentile(0.95, percentile_agg(highpress_u21)) as highpress_u21, approx_percentile(0.95, percentile_agg(highpress_u22)) as highpress_u22, " \
-                       f"avg(ABS(fas_u1 - fas_u2)) as fas_sub, avg(ABS(ras_u1 - ras_u2)) as ras_sub " \
-                       f"FROM public.dev_macda where msg_calc_parse_time > now() - INTERVAL '5 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
-
             querysql_3m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
                        f"approx_percentile(0.95, percentile_agg(f_cp_u11)) as f_cp_u11, approx_percentile(0.95, percentile_agg(f_cp_u12)) as f_cp_u12, approx_percentile(0.95, percentile_agg(f_cp_u21)) as f_cp_u21, approx_percentile(0.95, percentile_agg(f_cp_u22)) as f_cp_u22, " \
                        f"avg(ABS(i_cp_u11 - i_cp_u12)) as w_crntu1_sub, avg(ABS(i_cp_u21 - i_cp_u22)) as w_crntu2_sub " \
@@ -425,20 +417,59 @@ class TSutil(metaclass=Cached):
                           f"FROM public.dev_macda where msg_calc_parse_time > now() - INTERVAL '15 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
 
             querysql_20m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
-                           f"approx_percentile(0.95, percentile_agg(bflt_tempover)) as bflt_tempover " \
+                           f"approx_percentile(0.95, percentile_agg(bflt_tempover)) as bflt_tempover, " \
+                           f"approx_percentile(0.95, percentile_agg(cfbk_ef_u11)) as cfbk_ef_u11, approx_percentile(0.95, percentile_agg(cfbk_ef_u21)) as cfbk_ef_u21, " \
+                           f"approx_percentile(0.95, percentile_agg(aq_co2_u1)) as aq_co2_u1, approx_percentile(0.95, percentile_agg(aq_co2_u2)) as aq_co2_u2, " \
+                           f"approx_percentile(0.95, percentile_agg(aq_tvoc_u1)) as aq_tvoc_u1, approx_percentile(0.95, percentile_agg(aq_tvoc_u2)) as aq_tvoc_u2, " \
+                           f"approx_percentile(0.95, percentile_agg(aq_pm2_5_u1)) as aq_pm2_5_u1, approx_percentile(0.95, percentile_agg(aq_pm2_5_u2)) as aq_pm2_5_u2, " \
+                           f"approx_percentile(0.95, percentile_agg(aq_pm10_u1)) as aq_pm10_u1, approx_percentile(0.95, percentile_agg(aq_pm10_u2)) as aq_pm10_u2 " \
                            f"FROM public.dev_macda where msg_calc_parse_time > now() - INTERVAL '20 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
 
             querysql_30m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
                            f"approx_percentile(0.95, percentile_agg(cfbk_ef_u11)) as cfbk_ef_u11, approx_percentile(0.95, percentile_agg(cfbk_ef_u21)) as cfbk_ef_u21, " \
+                           f"approx_percentile(0.95, percentile_agg(cfbk_cf_u11)) as cfbk_cf_u11, approx_percentile(0.95, percentile_agg(cfbk_cf_u21)) as cfbk_cf_u21, " \
                            f"approx_percentile(0.95, percentile_agg(presdiff_u1)) as presdiff_u1, approx_percentile(0.95, percentile_agg(presdiff_u2)) as presdiff_u2 " \
                            f"FROM public.dev_macda where msg_calc_parse_time > now() - INTERVAL '30 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
         else:
-            querysql = f"select msg_calc_dvc_no, approx_percentile(0.95, percentile_agg(wmode_u1)) as dvc_w_op_mode_u1, approx_percentile(0.95, percentile_agg(fas_u1)) as dvc_i_fat_u1, approx_percentile(0.95, percentile_agg(f_cp_u11)) as dvc_w_freq_u11, " \
-                       f"approx_percentile(0.95, percentile_agg(suckp_u11)) as dvc_i_suck_pres_u11, approx_percentile(0.95, percentile_agg(f_cp_u12)) as dvc_w_freq_u12, approx_percentile(0.95, percentile_agg(suckp_u12)) as dvc_i_suck_pres_u12, " \
-                       f"approx_percentile(0.95, percentile_agg(wmode_u2)) as dvc_w_op_mode_u2, approx_percentile(0.95, percentile_agg(fas_u2)) as dvc_i_fat_u2, approx_percentile(0.95, percentile_agg(f_cp_u21)) as dvc_w_freq_u21, approx_percentile(0.95, percentile_agg(suckp_u21)) as dvc_i_suck_pres_u21, " \
-                       f"approx_percentile(0.95, percentile_agg(f_cp_u22)) as dvc_w_freq_u22, approx_percentile(0.95, percentile_agg(suckp_u22)) as dvc_i_suck_pres_u22, 1 as dvc_bflt_trainmove, avg(ABS(f_cp_u11 - f_cp_u12)) as w_frequ1_sub, avg(ABS(i_cp_u11 - i_cp_u12)) as w_crntu1_sub, " \
-                       f"avg(ABS(f_cp_u21 - f_cp_u22)) as w_frequ2_sub, avg(ABS(i_cp_u21 - i_cp_u22)) as w_crntu2_sub, avg(ABS(fas_u1 - fas_u2)) as fat_sub, avg(ABS(ras_u1 - ras_u2)) as rat_sub, approx_percentile(0.95, percentile_agg(bflt_tempover)) as dvc_bflt_cabinovertemp " \
-                       f"FROM public.pro_macda where msg_calc_dvc_time > now() - INTERVAL '5 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
+            querysql_3m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
+                          f"approx_percentile(0.95, percentile_agg(f_cp_u11)) as f_cp_u11, approx_percentile(0.95, percentile_agg(f_cp_u12)) as f_cp_u12, approx_percentile(0.95, percentile_agg(f_cp_u21)) as f_cp_u21, approx_percentile(0.95, percentile_agg(f_cp_u22)) as f_cp_u22, " \
+                          f"avg(ABS(i_cp_u11 - i_cp_u12)) as w_crntu1_sub, avg(ABS(i_cp_u21 - i_cp_u22)) as w_crntu2_sub " \
+                          f"FROM public.pro_macda where msg_calc_dvc_time > now() - INTERVAL '3 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
+
+            querysql_5m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
+                          f"approx_percentile(0.95, percentile_agg(f_cp_u11)) as f_cp_u11, approx_percentile(0.95, percentile_agg(f_cp_u12)) as f_cp_u12, approx_percentile(0.95, percentile_agg(f_cp_u21)) as f_cp_u21, approx_percentile(0.95, percentile_agg(f_cp_u22)) as f_cp_u22, " \
+                          f"approx_percentile(0.95, percentile_agg(suckp_u11)) as suckp_u11, approx_percentile(0.95, percentile_agg(suckp_u12)) as suckp_u12, approx_percentile(0.95, percentile_agg(suckp_u21)) as suckp_u21, approx_percentile(0.95, percentile_agg(suckp_u22)) as suckp_u22, " \
+                          f"avg(ABS(fas_u1 - fas_u2)) as fas_sub, avg(ABS(ras_u1 - ras_u2)) as ras_sub " \
+                          f"FROM public.pro_macda where msg_calc_dvc_time > now() - INTERVAL '5 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
+
+            querysql_10m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
+                           f"approx_percentile(0.95, percentile_agg(sp_u11)) as sp_u11, approx_percentile(0.95, percentile_agg(sp_u12)) as sp_u12, approx_percentile(0.95, percentile_agg(sp_u21)) as sp_u21, approx_percentile(0.95, percentile_agg(sp_u22)) as sp_u22, " \
+                           f"approx_percentile(0.95, percentile_agg(cfbk_ef_u11)) as cfbk_ef_u11, approx_percentile(0.95, percentile_agg(cfbk_ef_u21)) as cfbk_ef_u21, approx_percentile(0.95, percentile_agg(cfbk_cf_u11)) as cfbk_cf_u11, approx_percentile(0.95, percentile_agg(cfbk_cf_u21)) as cfbk_cf_u21, " \
+                           f"approx_percentile(0.95, percentile_agg(i_ef_u11)) as i_ef_u11, approx_percentile(0.95, percentile_agg(i_ef_u12)) as i_ef_u12, approx_percentile(0.95, percentile_agg(i_ef_u21)) as i_ef_u21, approx_percentile(0.95, percentile_agg(i_ef_u22)) as i_ef_u22, " \
+                           f"approx_percentile(0.95, percentile_agg(i_cf_u11)) as i_cf_u11, approx_percentile(0.95, percentile_agg(i_cf_u12)) as i_cf_u12, approx_percentile(0.95, percentile_agg(i_cf_u21)) as i_cf_u21, approx_percentile(0.95, percentile_agg(i_cf_u22)) as i_cf_u22, " \
+                           f"approx_percentile(0.95, percentile_agg(fas_u1)) as fas_u1, approx_percentile(0.95, percentile_agg(fas_u2)) as fas_u2, " \
+                           f"approx_percentile(0.95, percentile_agg(cfbk_exufan)) as cfbk_exufan, approx_percentile(0.95, percentile_agg(i_exufan)) as i_exufan, " \
+                           f"approx_percentile(0.95, percentile_agg(i_cp_u11)) as i_cp_u11, approx_percentile(0.95, percentile_agg(i_cp_u12)) as i_cp_u12, approx_percentile(0.95, percentile_agg(i_cp_u21)) as i_cp_u21, approx_percentile(0.95, percentile_agg(i_cp_u22)) as i_cp_u22 " \
+                           f"FROM public.pro_macda where msg_calc_dvc_time > now() - INTERVAL '10 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
+
+            querysql_15m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
+                           f"approx_percentile(0.95, percentile_agg(highpress_u11)) as highpress_u11, approx_percentile(0.95, percentile_agg(highpress_u12)) as highpress_u12, approx_percentile(0.95, percentile_agg(highpress_u21)) as highpress_u21, approx_percentile(0.95, percentile_agg(highpress_u22)) as highpress_u22 " \
+                           f"FROM public.pro_macda where msg_calc_dvc_time > now() - INTERVAL '15 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
+
+            querysql_20m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
+                           f"approx_percentile(0.95, percentile_agg(bflt_tempover)) as bflt_tempover, " \
+                           f"approx_percentile(0.95, percentile_agg(cfbk_ef_u11)) as cfbk_ef_u11, approx_percentile(0.95, percentile_agg(cfbk_ef_u21)) as cfbk_ef_u21, " \
+                           f"approx_percentile(0.95, percentile_agg(aq_co2_u1)) as aq_co2_u1, approx_percentile(0.95, percentile_agg(aq_co2_u2)) as aq_co2_u2, " \
+                           f"approx_percentile(0.95, percentile_agg(aq_tvoc_u1)) as aq_tvoc_u1, approx_percentile(0.95, percentile_agg(aq_tvoc_u2)) as aq_tvoc_u2, " \
+                           f"approx_percentile(0.95, percentile_agg(aq_pm2_5_u1)) as aq_pm2_5_u1, approx_percentile(0.95, percentile_agg(aq_pm2_5_u2)) as aq_pm2_5_u2, " \
+                           f"approx_percentile(0.95, percentile_agg(aq_pm10_u1)) as aq_pm10_u1, approx_percentile(0.95, percentile_agg(aq_pm10_u2)) as aq_pm10_u2 " \
+                           f"FROM public.pro_macda where msg_calc_dvc_time > now() - INTERVAL '20 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
+
+            querysql_30m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
+                           f"approx_percentile(0.95, percentile_agg(cfbk_ef_u11)) as cfbk_ef_u11, approx_percentile(0.95, percentile_agg(cfbk_ef_u21)) as cfbk_ef_u21, " \
+                           f"approx_percentile(0.95, percentile_agg(cfbk_cf_u11)) as cfbk_cf_u11, approx_percentile(0.95, percentile_agg(cfbk_cf_u21)) as cfbk_cf_u21, " \
+                           f"approx_percentile(0.95, percentile_agg(presdiff_u1)) as presdiff_u1, approx_percentile(0.95, percentile_agg(presdiff_u2)) as presdiff_u2 " \
+                           f"FROM public.pro_macda where msg_calc_dvc_time > now() - INTERVAL '30 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
         try:
             log.debug(querysql_3m)
             log.debug(querysql_5m)
