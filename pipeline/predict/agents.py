@@ -20,7 +20,7 @@ from collections import Counter
 @app.agent(input_topic)
 async def store_signal(stream):
     tu = TSutil()
-    sp = SensorPolyfit()
+    #sp = SensorPolyfit()
     predictcounter = Counter()
     async for data in stream:
         pdvcno = data['payload']['msg_calc_dvc_no']
@@ -38,10 +38,17 @@ async def store_signal(stream):
             predictdata = tu.get_predictdata(mode, pdvcno)
             if predictdata['len'] > 0:
                 # ref leak predict
-                ref_leak_u11 = sp.polyfit(predictdata['data']['dvc_w_op_mode_u1'], predictdata['data']['dvc_i_fat_u1'], predictdata['data']['dvc_w_freq_u11'], predictdata['data']['dvc_i_suck_pres_u11'])
-                ref_leak_u12 = sp.polyfit(predictdata['data']['dvc_w_op_mode_u1'], predictdata['data']['dvc_i_fat_u1'], predictdata['data']['dvc_w_freq_u12'], predictdata['data']['dvc_i_suck_pres_u12'])
-                ref_leak_u21 = sp.polyfit(predictdata['data']['dvc_w_op_mode_u2'], predictdata['data']['dvc_i_fat_u2'], predictdata['data']['dvc_w_freq_u21'], predictdata['data']['dvc_i_suck_pres_u21'])
-                ref_leak_u22 = sp.polyfit(predictdata['data']['dvc_w_op_mode_u2'], predictdata['data']['dvc_i_fat_u2'], predictdata['data']['dvc_w_freq_u22'], predictdata['data']['dvc_i_suck_pres_u22'])
+                #ref_leak_u11 = sp.polyfit(predictdata['data']['dvc_w_op_mode_u1'], predictdata['data']['dvc_i_fat_u1'], predictdata['data']['dvc_w_freq_u11'], predictdata['data']['dvc_i_suck_pres_u11'])
+                #ref_leak_u12 = sp.polyfit(predictdata['data']['dvc_w_op_mode_u1'], predictdata['data']['dvc_i_fat_u1'], predictdata['data']['dvc_w_freq_u12'], predictdata['data']['dvc_i_suck_pres_u12'])
+                #ref_leak_u21 = sp.polyfit(predictdata['data']['dvc_w_op_mode_u2'], predictdata['data']['dvc_i_fat_u2'], predictdata['data']['dvc_w_freq_u21'], predictdata['data']['dvc_i_suck_pres_u21'])
+                #ref_leak_u22 = sp.polyfit(predictdata['data']['dvc_w_op_mode_u2'], predictdata['data']['dvc_i_fat_u2'], predictdata['data']['dvc_w_freq_u22'], predictdata['data']['dvc_i_suck_pres_u22'])
+
+                ref_leak_u11 = 0
+                ref_leak_u12 = 0
+                ref_leak_u21 = 0
+                ref_leak_u22 = 0
+
+
                 # ref pump predict
                 ref_pump_u1 = 0
                 ref_pump_u2 = 0
