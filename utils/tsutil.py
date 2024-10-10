@@ -478,10 +478,9 @@ class TSutil(metaclass=Cached):
             log.debug(querysql_20m)
             log.debug(querysql_30m)
             returndata = {}
-            '''
             conn = self.conn_pool.getconn()
             cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-            cur.execute(querysql)
+            cur.execute(querysql_3m)
             result = cur.fetchall()
             rlen = len(result)
             returndata['len'] = rlen
@@ -491,7 +490,6 @@ class TSutil(metaclass=Cached):
                 returndata['data'] = None
             cur.close()
             self.conn_pool.putconn(conn)
-            '''
             return returndata
         except Exception as exp:
             log.error('Exception at tsutil.prepare_predictdata() %s ' % exp)
@@ -533,7 +531,8 @@ class TSutil(metaclass=Cached):
 
 if __name__ == '__main__':
     tu = TSutil()
-    tu.prepare_predictdata('dev', '700203')
+    rdata = tu.prepare_predictdata('dev', '700203')
+    log.debug(rdata)
     '''
     tu = TSutil()
     jobj = {"schema":"s1","playload":"p1"}
