@@ -684,10 +684,14 @@ class TSutil(metaclass=Cached):
             predictsave = (f"{ref_leak_u11},{ref_leak_u12},{ref_leak_u21},{ref_leak_u22},{f_cp_u1},{f_cp_u2},{f_fas},{f_ras},{cabin_overtemp},{f_presdiff_u1},{f_presdiff_u2},"
                            f"{f_ef_u11},{f_ef_u12},{f_ef_u21},{f_ef_u22},{f_cf_u11},{f_cf_u12},{f_cf_u21},{f_cf_u22},{f_exufan},{f_fas_u11},{f_fas_u12},{f_fas_u21},{f_fas_u22},{f_aq_u1},{f_aq_u2}")
             predictskey = ['ref_leak_u11','ref_leak_u12','ref_leak_u21','ref_leak_u22','f_cp_u1','f_cp_u2','f_fas','f_ras','cabin_overtemp','f_presdiff_u1','f_presdiff_u2','f_ef_u11','f_ef_u12','f_ef_u21','f_ef_u22','f_cf_u11','f_cf_u12','f_cf_u21','f_cf_u22','f_exufan','f_fas_u11','f_fas_u12','f_fas_u21','f_fas_u22','f_aq_u1','f_aq_u2']
-            log.debug(predictskey)
-            log.debug(predictsave)
-            log.debug(list(map(int,predictsave.split(','))))
-            log.debug(sum(list(map(int,predictsave.split(',')))))
+            predictjson = {}
+            for k in range(len(predictskey)):
+                predictjson[predictskey[k]] = list(map(int,predictsave.split(',')))[k]
+            #log.debug(predictskey)
+            #log.debug(predictsave)
+            #log.debug(list(map(int,predictsave.split(','))))
+            #log.debug(sum(list(map(int,predictsave.split(',')))))
+            log.debug(predictjson)
 
 
     def insert_predictdata(self, tablename, jsonobj):
