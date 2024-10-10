@@ -480,14 +480,73 @@ class TSutil(metaclass=Cached):
             returndata = {}
             conn = self.conn_pool.getconn()
             cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            #query 3m
             cur.execute(querysql_3m)
             result = cur.fetchall()
             rlen = len(result)
-            returndata['len'] = rlen
+            rdata = {}
+            rdata['len'] = rlen
             if rlen >= 1:
-                returndata['data'] = result[0]
+                rdata['data'] = result[0]
             else:
-                returndata['data'] = None
+                rdata['data'] = None
+            returndata['data3m'] = rdata
+            #query 5m
+            cur.execute(querysql_5m)
+            result = cur.fetchall()
+            rlen = len(result)
+            rdata = {}
+            rdata['len'] = rlen
+            if rlen >= 1:
+                rdata['data'] = result[0]
+            else:
+                rdata['data'] = None
+            returndata['data5m'] = rdata
+            #query 10m
+            cur.execute(querysql_10m)
+            result = cur.fetchall()
+            rlen = len(result)
+            rdata = {}
+            rdata['len'] = rlen
+            if rlen >= 1:
+                rdata['data'] = result[0]
+            else:
+                rdata['data'] = None
+            returndata['data10m'] = rdata
+            #query 15m
+            cur.execute(querysql_15m)
+            result = cur.fetchall()
+            rlen = len(result)
+            rdata = {}
+            rdata['len'] = rlen
+            if rlen >= 1:
+                rdata['data'] = result[0]
+            else:
+                rdata['data'] = None
+            returndata['data15m'] = rdata
+            #query 20m
+            cur.execute(querysql_20m)
+            result = cur.fetchall()
+            rlen = len(result)
+            rdata = {}
+            rdata['len'] = rlen
+            if rlen >= 1:
+                rdata['data'] = result[0]
+            else:
+                rdata['data'] = None
+            returndata['data20m'] = rdata
+            #query 30m
+            cur.execute(querysql_30m)
+            result = cur.fetchall()
+            rlen = len(result)
+            rdata = {}
+            rdata['len'] = rlen
+            if rlen >= 1:
+                rdata['data'] = result[0]
+            else:
+                rdata['data'] = None
+            returndata['data30m'] = rdata
+
             cur.close()
             self.conn_pool.putconn(conn)
             return returndata
