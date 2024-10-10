@@ -1,6 +1,6 @@
-docker save -o redpanda.tar harbor.naivehero.top/macda/redpanda:v24.2.1 && \
+docker save -o redpanda.tar harbor.naivehero.top/macda/redpanda:v24.2.6 && \
 gzip redpanda.tar && \
-docker save -o redpanda-console.tar harbor.naivehero.top/macda/redpanda-console:v2.7.0 && \
+docker save -o redpanda-console.tar harbor.naivehero.top/macda/redpanda-console:v2.7.2 && \
 gzip redpanda-console.tar && \
 docker save -o kafka-connect.tar harbor.naivehero.top/macda/kafka-connect:latest && \
 gzip kafka-connect.tar && \
@@ -26,7 +26,7 @@ docker save -o pgadmin4.tar harbor.naivehero.top/macda/pgadmin4:8.10 && \
 gzip pgadmin4.tar && \
 docker save -o macda-nb.tar harbor.naivehero.top/macda/macda:nb67-v1.2408 && \
 gzip macda-nb.tar && \
-docker save -o desktop.tar harbor.naivehero.top/kasmweb/kasm-desktop-focal-web:1.12.1 && \
+docker save -o desktop.tar harbor.naivehero.top/kasmweb/ubuntu-noble-desktop-ime:1.16.0 && \
 gzip desktop.tar  && \
 docker save -o macdaweb.tar harbor.naivehero.top/macda/macdaweb-nb67:v1.0  && \
 gzip macdaweb.tar
