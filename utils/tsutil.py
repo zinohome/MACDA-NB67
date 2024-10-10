@@ -614,11 +614,33 @@ class TSutil(metaclass=Cached):
             if round(predictdata['data20m']['data']['bflt_tempover'],1) > 0:
                 cabin_overtemp = 1
 
+            #f_presdiff  predict 滤网脏堵预警
+            f_presdiff_u1 = 0
+            if round(predictdata['data30m']['data']['cfbk_ef_u11']) ==1 and round(predictdata['data30m']['data']['presdiff_u1']) > 300:
+                f_presdiff_u1 = 1
+            f_presdiff_u2 = 0
+            if round(predictdata['data30m']['data']['cfbk_ef_u21']) ==1 and round(predictdata['data30m']['data']['presdiff_u2']) > 300:
+                f_presdiff_u2 = 1
 
+            #f_ef predict 通风机电流预警
+            f_ef_u11 = 0
+            if round(predictdata['data10m']['data']['cfbk_ef_u11']) == 1 and round(predictdata['data10m']['data']['i_ef_u11'],1) > 2:
+                f_ef_u11 = 1
+            f_ef_u12 = 0
+            if round(predictdata['data10m']['data']['cfbk_ef_u11']) == 1 and round(predictdata['data10m']['data']['i_ef_u12'],1) > 2:
+                f_ef_u12 = 1
+            f_ef_u21 = 0
+            if round(predictdata['data10m']['data']['cfbk_ef_u21']) == 1 and round(predictdata['data10m']['data']['i_ef_u21'],1) > 2:
+                f_ef_u21 = 1
+            f_ef_u22 = 0
+            if round(predictdata['data10m']['data']['cfbk_ef_u21']) == 1 and round(predictdata['data10m']['data']['i_ef_u22'],1) > 2:
+                f_ef_u22 = 1
 
-            log.debug(predictdata['data20m']['data']['bflt_tempover'])
+            log.debug(predictdata['data10m']['data']['cfbk_ef_u21'])
+            log.debug(predictdata['data10m']['data']['i_ef_u22'])
 
-            predictsave = f"{ref_leak_u11}{ref_leak_u12}{ref_leak_u21}{ref_leak_u22}{f_cp_u1}{f_cp_u2}{f_fas}{f_ras}{cabin_overtemp}"
+            predictsave = (f"{ref_leak_u11}{ref_leak_u12}{ref_leak_u21}{ref_leak_u22}{f_cp_u1}{f_cp_u2}{f_fas}{f_ras}{cabin_overtemp}{f_presdiff_u1}{f_presdiff_u2}"
+                           f"{f_ef_u11}{f_ef_u12}{f_ef_u21}{f_ef_u22}")
             log.debug(predictsave)
 
 
