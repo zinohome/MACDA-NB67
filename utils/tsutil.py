@@ -673,15 +673,21 @@ class TSutil(metaclass=Cached):
             if round(predictdata['data10m']['data']['fas_u2'],1) < 35 and round(predictdata['data10m']['data']['i_cp_u22'],1) > 18:
                 f_fas_u22 = 1
 
+            # f_aq predict 空气质量监测终端预警
+            f_aq_u1 = 0
+            if (round(predictdata['data20m']['data']['cfbk_ef_u11']) == 1) and ( round(predictdata['data20m']['data']['aq_co2_u1'])>1200 or round(predictdata['data20m']['data']['aq_pm2_5_u1'])>75 or round(predictdata['data20m']['data']['aq_pm10_u1'])>150 or round(predictdata['data20m']['data']['aq_tvoc_u1'])>600):
+                f_aq_u1 = 1
+            f_aq_u2 = 0
+            if (round(predictdata['data20m']['data']['cfbk_ef_u21']) == 1) and ( round(predictdata['data20m']['data']['aq_co2_u2'])>1200 or round(predictdata['data20m']['data']['aq_pm2_5_u2'])>75 or round(predictdata['data20m']['data']['aq_pm10_u2'])>150 or round(predictdata['data20m']['data']['aq_tvoc_u2'])>600):
+                f_aq_u2 = 1
 
-            log.debug(predictdata['data10m']['data']['fas_u1'])
-            log.debug(predictdata['data10m']['data']['i_cp_u11'])
-            log.debug(predictdata['data10m']['data']['fas_u2'])
-            log.debug(predictdata['data10m']['data']['i_cp_u21'])
-
-            predictsave = (f"{ref_leak_u11}{ref_leak_u12}{ref_leak_u21}{ref_leak_u22}{f_cp_u1}{f_cp_u2}{f_fas}{f_ras}{cabin_overtemp}{f_presdiff_u1}{f_presdiff_u2}"
-                           f"{f_ef_u11}{f_ef_u12}{f_ef_u21}{f_ef_u22}{f_cf_u11}{f_cf_u12}{f_cf_u21}{f_cf_u22}{f_exufan}{f_fas_u11}{f_fas_u12}{f_fas_u21}{f_fas_u22}")
+            predictsave = (f"{ref_leak_u11},{ref_leak_u12},{ref_leak_u21},{ref_leak_u22},{f_cp_u1},{f_cp_u2},{f_fas},{f_ras},{cabin_overtemp},{f_presdiff_u1},{f_presdiff_u2},"
+                           f"{f_ef_u11},{f_ef_u12},{f_ef_u21},{f_ef_u22},{f_cf_u11},{f_cf_u12},{f_cf_u21},{f_cf_u22},{f_exufan},{f_fas_u11},{f_fas_u12},{f_fas_u21},{f_fas_u22},{f_aq_u1},{f_aq_u2}")
+            predictskey = ['ref_leak_u11','ref_leak_u12','ref_leak_u21','ref_leak_u22','f_cp_u1','f_cp_u2','f_fas','f_ras','cabin_overtemp','f_presdiff_u1','f_presdiff_u2','f_ef_u11','f_ef_u12','f_ef_u21','f_ef_u22','f_cf_u11','f_cf_u12','f_cf_u21','f_cf_u22','f_exufan','f_fas_u11','f_fas_u12','f_fas_u21','f_fas_u22','f_aq_u1','f_aq_u2']
+            log.debug(predictskey)
             log.debug(predictsave)
+            log.debug(list(map(int,predictsave.split(','))))
+            log.debug(sum(list(map(int,predictsave.split(',')))))
 
 
     def insert_predictdata(self, tablename, jsonobj):
