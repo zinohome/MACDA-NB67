@@ -74,7 +74,7 @@ class Nb67(KaitaiStruct):
         self.cfbk_ev_u1 = self._io.read_bits_int_le(1) != 0
         self.cfbk_ev_u2 = self._io.read_bits_int_le(1) != 0
         self.cfbk_ewd = self._io.read_bits_int_le(1) != 0
-        self.ig_rsv8 = self._io.read_bits_int_le(1) != 0
+        self.cfbk_exufan = self._io.read_bits_int_le(1) != 0
         self.ig_rsv9 = self._io.read_bits_int_le(1) != 0
         self.ig_rsv10 = self._io.read_bits_int_le(1) != 0
         self.bocflt_ef_u11 = self._io.read_bits_int_le(1) != 0

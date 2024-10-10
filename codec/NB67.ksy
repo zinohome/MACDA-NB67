@@ -112,7 +112,7 @@ seq:
     type: b1le
   - id: cfbk_ewd
     type: b1le
-  - id: ig_rsv8
+  - id: cfbk_exufan
     type: b1le
   - id: ig_rsv9
     type: b1le
