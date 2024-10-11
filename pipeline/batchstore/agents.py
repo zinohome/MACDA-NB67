@@ -19,7 +19,6 @@ from utils.tsutil import TSutil
 @app.agent(input_topic)
 async def store_signal(stream):
     tu = TSutil()
-    sp = SensorPolyfit()
     async for datas in stream.take(settings.TSDB_BATCH, within=settings.TSDB_BATCH_TIME):
         log.debug("==================== Get parsed data batch ====================")
         dev_mode = settings.DEV_MODE
