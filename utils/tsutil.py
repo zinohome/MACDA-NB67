@@ -192,9 +192,9 @@ class TSutil(metaclass=Cached):
     def get_predict_data(self, mode):
         querysql = ''
         if mode == 'dev':
-            querysql = f"SELECT msg_calc_dvc_no, last(msg_calc_parse_time, msg_calc_parse_time) as time, max(ref_leak_u11) as ref_leak_u11, max(ref_leak_u12) as ref_leak_u12, max(ref_leak_u21) as ref_leak_u21, max(ref_leak_u22) as ref_leak_u22, max(ref_pump_u1) as ref_pump_u1, max(ref_pump_u2) as ref_pump_u2, max(fat_sensor) as fat_sensor, max(rat_sensor) as rat_sensor, max(cabin_overtemp) as cabin_overtemp FROM dev_predict WHERE msg_calc_parse_time > now() - INTERVAL '5 minutes' group by msg_calc_dvc_no"
+            querysql = f"SELECT msg_calc_dvc_no, last(msg_calc_parse_time, msg_calc_parse_time) as time, max(ref_leak_u11) as ref_leak_u11, max(ref_leak_u12) as ref_leak_u12, max(ref_leak_u21) as ref_leak_u21, max(ref_leak_u22) as ref_leak_u22, max(f_cp_u1) as f_cp_u1, max(f_cp_u2) as f_cp_u2, max(f_fas) as f_fas, max(f_ras) as f_ras, max(cabin_overtemp) as cabin_overtemp, max(f_presdiff_u1) as f_presdiff_u1, max(f_presdiff_u2) as f_presdiff_u2, max(f_ef_u11) as f_ef_u11, max(f_ef_u12) as f_ef_u12, max(f_ef_u21) as f_ef_u21, max(f_ef_u22) as f_ef_u22, max(f_cf_u11) as f_cf_u11, max(f_cf_u12) as f_cf_u12, max(f_cf_u21) as f_cf_u21, max(f_cf_u22) as f_cf_u22, max(f_exufan) as f_exufan, max(f_fas_u11) as f_fas_u11, max(f_fas_u12) as f_fas_u12, max(f_fas_u21) as f_fas_u21, max(f_fas_u22) as f_fas_u22, max(f_aq_u1) as f_aq_u1, max(f_aq_u2) as f_aq_u2 FROM dev_predict WHERE msg_calc_parse_time > now() - INTERVAL '5 minutes' group by msg_calc_dvc_no"
         else:
-            querysql = f"SELECT msg_calc_dvc_no, last(msg_calc_dvc_time, msg_calc_dvc_time) as time,  max(ref_leak_u11) as ref_leak_u11, max(ref_leak_u12) as ref_leak_u12, max(ref_leak_u21) as ref_leak_u21, max(ref_leak_u22) as ref_leak_u22, max(ref_pump_u1) as ref_pump_u1, max(ref_pump_u2) as ref_pump_u2, max(fat_sensor) as fat_sensor, max(rat_sensor) as rat_sensor, max(cabin_overtemp) as cabin_overtemp FROM pro_predict WHERE msg_calc_dvc_time > now() - INTERVAL '5 minutes' group by msg_calc_dvc_no"
+            querysql = f"SELECT msg_calc_dvc_no, last(msg_calc_dvc_time, msg_calc_dvc_time) as time, max(ref_leak_u11) as ref_leak_u11, max(ref_leak_u12) as ref_leak_u12, max(ref_leak_u21) as ref_leak_u21, max(ref_leak_u22) as ref_leak_u22, max(f_cp_u1) as f_cp_u1, max(f_cp_u2) as f_cp_u2, max(f_fas) as f_fas, max(f_ras) as f_ras, max(cabin_overtemp) as cabin_overtemp, max(f_presdiff_u1) as f_presdiff_u1, max(f_presdiff_u2) as f_presdiff_u2, max(f_ef_u11) as f_ef_u11, max(f_ef_u12) as f_ef_u12, max(f_ef_u21) as f_ef_u21, max(f_ef_u22) as f_ef_u22, max(f_cf_u11) as f_cf_u11, max(f_cf_u12) as f_cf_u12, max(f_cf_u21) as f_cf_u21, max(f_cf_u22) as f_cf_u22, max(f_exufan) as f_exufan, max(f_fas_u11) as f_fas_u11, max(f_fas_u12) as f_fas_u12, max(f_fas_u21) as f_fas_u21, max(f_fas_u22) as f_fas_u22, max(f_aq_u1) as f_aq_u1, max(f_aq_u2) as f_aq_u2 FROM pro_predict WHERE msg_calc_dvc_time > now() - INTERVAL '5 minutes' group by msg_calc_dvc_no"
         try:
             returndata = {}
             conn = self.conn_pool.getconn()
@@ -688,7 +688,7 @@ class TSutil(metaclass=Cached):
             predictskey = ['ref_leak_u11','ref_leak_u12','ref_leak_u21','ref_leak_u22','f_cp_u1','f_cp_u2','f_fas','f_ras','cabin_overtemp','f_presdiff_u1','f_presdiff_u2','f_ef_u11','f_ef_u12','f_ef_u21','f_ef_u22','f_cf_u11','f_cf_u12','f_cf_u21','f_cf_u22','f_exufan','f_fas_u11','f_fas_u12','f_fas_u21','f_fas_u22','f_aq_u1','f_aq_u2']
             for k in range(len(predictskey)):
                 predictjson[predictskey[k]] = list(map(int,predictsave.split(',')))[k]
-            log.debug(predictskey)
+            #log.debug(predictskey)
             #log.debug(predictsave)
             #log.debug(list(map(int,predictsave.split(','))))
             #log.debug(sum(list(map(int,predictsave.split(',')))))
