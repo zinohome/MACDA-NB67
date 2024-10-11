@@ -337,7 +337,7 @@ services:
     networks:
       - macdanet
   macda-Parse1:
-    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2410
     container_name: macda-Parse1
     hostname: macda-Parse1
     restart: unless-stopped
@@ -352,7 +352,7 @@ services:
     networks:
       - macdanet
   macda-Parse2:
-    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2410
     container_name: macda-Parse2
     hostname: macda-Parse2
     restart: unless-stopped
@@ -367,7 +367,7 @@ services:
     networks:
       - macdanet
   macda-Parse3:
-    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2410
     container_name: macda-Parse3
     hostname: macda-Parse3
     restart: unless-stopped
@@ -382,7 +382,7 @@ services:
     networks:
       - macdanet
   macda-Store1:
-    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2410
     container_name: macda-Store1
     hostname: macda-Store1
     restart: unless-stopped
@@ -397,7 +397,7 @@ services:
     networks:
       - macdanet
   macda-Store2:
-    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2410
     container_name: macda-Store2
     hostname: macda-Store2
     restart: unless-stopped
@@ -412,7 +412,7 @@ services:
     networks:
       - macdanet
   macda-Store3:
-    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2410
     container_name: macda-Store3
     hostname: macda-Store3
     restart: unless-stopped
@@ -427,7 +427,7 @@ services:
     networks:
       - macdanet
   macda-Status1:
-    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2410
     container_name: macda-Status1
     hostname: macda-Status1
     restart: unless-stopped
@@ -442,7 +442,7 @@ services:
     networks:
       - macdanet
   macda-Status2:
-    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2410
     container_name: macda-Status2
     hostname: macda-Status2
     restart: unless-stopped
@@ -457,7 +457,7 @@ services:
     networks:
       - macdanet
   macda-Status3:
-    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2410
     container_name: macda-Status3
     hostname: macda-Status3
     restart: unless-stopped

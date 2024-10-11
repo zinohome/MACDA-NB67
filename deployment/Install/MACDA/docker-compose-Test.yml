@@ -317,7 +317,7 @@ services:
     networks:
       - macdanet
   macda-Parse1:
-    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2410
     container_name: macda-Parse1
     hostname: macda-Parse1
     restart: unless-stopped
@@ -332,7 +332,7 @@ services:
     networks:
       - macdanet
   macda-Store1:
-    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2410
     container_name: macda-Store1
     hostname: macda-Store1
     restart: unless-stopped
@@ -347,7 +347,7 @@ services:
     networks:
       - macdanet
   macda-Status1:
-    image: harbor.naivehero.top/macda/macda:nb67-v1.2408
+    image: harbor.naivehero.top/macda/macda:nb67-v1.2410
     container_name: macda-Status1
     hostname: macda-Status1
     restart: unless-stopped
