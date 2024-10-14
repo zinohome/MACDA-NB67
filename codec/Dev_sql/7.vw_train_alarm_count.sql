@@ -1,7 +1,7 @@
 CREATE OR REPLACE VIEW public.vw_train_warnging_count
  AS
  SELECT dev_predict.msg_calc_train_no AS train_no,
-    max(dev_predict.ref_leak_u11) + max(dev_predict.ref_leak_u12) + max(dev_predict.ref_leak_u21) + max(dev_predict.ref_leak_u22) + max(dev_predict.ref_pump_u1) + max(dev_predict.ref_pump_u2) + max(dev_predict.fat_sensor) + max(dev_predict.rat_sensor) AS warning_count
+    max(dev_predict.ref_leak_u11) + max(dev_predict.ref_leak_u12) + max(dev_predict.ref_leak_u21) + max(dev_predict.ref_leak_u22) + max(dev_predict.f_cp_u1) + max(dev_predict.f_cp_u2) + max(dev_predict.f_fas) + max(dev_predict.f_ras) + max(dev_predict.cabin_overtemp) + max(dev_predict.f_presdiff_u1) + max(dev_predict.f_presdiff_u2) + max(dev_predict.f_ef_u11) + max(dev_predict.f_ef_u12) + max(dev_predict.f_ef_u21) + max(dev_predict.f_ef_u22) + max(dev_predict.f_cf_u11) + max(dev_predict.f_cf_u12) + max(dev_predict.f_cf_u21) + max(dev_predict.f_cf_u22) + max(dev_predict.f_exufan) + max(dev_predict.f_fas_u11) + max(dev_predict.f_fas_u12) + max(dev_predict.f_fas_u21) + max(dev_predict.f_fas_u22) + max(dev_predict.f_aq_u1) + max(dev_predict.f_aq_u2) AS warning_count
    FROM dev_predict
   WHERE dev_predict.msg_calc_parse_time >= (now() - '30 days'::interval) AND dev_predict.msg_calc_train_no <> '00000'::text
   GROUP BY dev_predict.msg_calc_train_no;
