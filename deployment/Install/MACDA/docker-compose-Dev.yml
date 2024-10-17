@@ -227,7 +227,7 @@ services:
     networks:
       - macdanet
   timescaledb:
-    image: harbor.naivehero.top/macda/timescaledb-ha:pg14-latest
+    image: harbor.naivehero.top/macda/timescaledb-ha:pg14-2.9
     container_name: timescaledb
     hostname: timescaledb
     restart: unless-stopped
