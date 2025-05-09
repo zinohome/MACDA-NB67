@@ -658,7 +658,7 @@ class TSutil(metaclass=Cached):
 
             # f_exufan predict 废排风机电流预警
             f_exufan = 0
-            if round(predictdata['data10m']['data']['cfbk_exufan'] ==1) and round(predictdata['data10m']['data']['i_exufan'],1) > 4:
+            if round(predictdata['data10m']['data']['cfbk_exufan']) ==1 and round(predictdata['data10m']['data']['i_exufan'],1) > 4:
                 f_exufan = 1
 
             # f_fas predict 压缩机电流预警
@@ -733,8 +733,12 @@ class TSutil(metaclass=Cached):
         return datetime(int(year_s), int(mon_s), int(day_s), int(hour_s), int(minute_s), int(second_s))
 
 if __name__ == '__main__':
-    tu = TSutil()
-    tu.predict('dev', '700203')
+    #tu = TSutil()
+    #tu.predict('dev', '700203')
+    print(round(0.999,1))
+    print(round(4.100053286500865,1))
+    if round(0.999,1)==1 and round(4.100053286500865,1) > 4:
+        print(round(4.100053286500865,1))
     '''
     tu = TSutil()
     jobj = {"schema":"s1","playload":"p1"}
