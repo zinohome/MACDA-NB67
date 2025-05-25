@@ -17,6 +17,7 @@ from utils.tsutil import TSutil
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, 'predictdata')
 
+
 class Cached(type):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -29,6 +30,8 @@ class Cached(type):
             obj = super().__call__(*args)
             self.__cache[args] = obj
             return obj
+
+
 class Alertutil(metaclass=Cached):
     def __init__(self):
         log.debug('========== Alertutil init : Code loading.')
@@ -38,7 +41,7 @@ class Alertutil(metaclass=Cached):
         self.__alertcode__['name'] = self.__alertcode__['name'].apply(str.lower)
         self.__partcode__ = pd.read_excel(partcodefile)
         self.__partcode__['name'] = self.__partcode__['name'].apply(str.lower)
-        #log.debug(self.__partcode__['name'])
+        # log.debug(self.__partcode__['name'])
         log.debug('========== Alertutil init : Code loaded.')
 
     def getvalue(self, codetype, rowvalue, colname):
@@ -54,7 +57,10 @@ class Alertutil(metaclass=Cached):
 
     @property
     def predictfield(self):
-        return ['ref_leak_u11', 'ref_leak_u12', 'ref_leak_u21', 'ref_leak_u22', 'f_cp_u1', 'f_cp_u2', 'f_fas', 'f_ras', 'cabin_overtemp', 'f_presdiff_u1', 'f_presdiff_u2', 'f_ef_u11', 'f_ef_u12', 'f_ef_u21', 'f_ef_u22', 'f_cf_u11', 'f_cf_u12', 'f_cf_u21', 'f_cf_u22', 'f_exufan', 'f_fas_u11', 'f_fas_u12', 'f_fas_u21', 'f_fas_u22', 'f_aq_u1', 'f_aq_u2']
+        return ['ref_leak_u11', 'ref_leak_u12', 'ref_leak_u21', 'ref_leak_u22', 'f_cp_u1', 'f_cp_u2', 'f_fas', 'f_ras',
+                'cabin_overtemp', 'f_presdiff_u1', 'f_presdiff_u2', 'f_ef_u11', 'f_ef_u12', 'f_ef_u21', 'f_ef_u22',
+                'f_cf_u11', 'f_cf_u12', 'f_cf_u21', 'f_cf_u22', 'f_exufan', 'f_fas_u11', 'f_fas_u12', 'f_fas_u21',
+                'f_fas_u22', 'f_aq_u1', 'f_aq_u2']
 
     @property
     def alertfield(self):
@@ -68,11 +74,13 @@ class Alertutil(metaclass=Cached):
 
     def send_statistics(self, statslist):
         srvurl = settings.STATS_RECORD_URL
-        #log.debug(srvurl)
-        #headers = {"content-type":"application/json","x-hasura-admin-secret":"passw0rd"}
-        headers = {"content-type":"application/json"}
+        # log.debug(srvurl)
+        # headers = {"content-type":"application/json","x-hasura-admin-secret":"passw0rd"}
+        # headers = {"content-type":"application/json"}
+        headers = {"content-type": "application/json",
+                   "x-token": "ap2jQ/2AVR4mHCHBXBlVkewphcPAMumty7czzXrPnWfWqLTOliDnG"}
         data = json.dumps(statslist, encoding="utf-8", ensure_ascii=False)
-        #log.debug(data)
+        # log.debug(data)
         if settings.SEND_STATS_RECORD:
             try:
                 response = requests.post(srvurl, data.encode(), headers=headers)
@@ -80,13 +88,16 @@ class Alertutil(metaclass=Cached):
             except Exception as exp:
                 log.error('Exception at alrtutil.send_statistics() %s ' % exp)
                 traceback.print_exc()
+
     def send_lifereport(self, statslist):
         srvurl = settings.LIFE_RECORD_URL
-        #log.debug(srvurl)
-        #headers = {"content-type":"application/json","x-hasura-admin-secret":"passw0rd"}
-        headers = {"content-type":"application/json"}
+        # log.debug(srvurl)
+        # headers = {"content-type":"application/json","x-hasura-admin-secret":"passw0rd"}
+        # headers = {"content-type":"application/json"}
+        headers = {"content-type": "application/json",
+                   "x-token": "ap2jQ/2AVR4mHCHBXBlVkewphcPAMumty7czzXrPnWfWqLTOliDnG"}
         data = json.dumps(statslist, encoding="utf-8", ensure_ascii=False)
-        #log.debug(data)
+        # log.debug(data)
         if settings.SEND_LIFE_RECORD:
             try:
                 response = requests.post(srvurl, data.encode(), headers=headers)
@@ -97,11 +108,13 @@ class Alertutil(metaclass=Cached):
 
     def send_status(self, statuslist):
         srvurl = settings.SYS_STATUS_URL
-        #log.debug(srvurl)
-        #headers = {"content-type":"application/json","x-hasura-admin-secret":"passw0rd"}
-        headers = {"content-type":"application/json"}
+        # log.debug(srvurl)
+        # headers = {"content-type":"application/json","x-hasura-admin-secret":"passw0rd"}
+        # headers = {"content-type":"application/json"}
+        headers = {"content-type": "application/json",
+                   "x-token": "ap2jQ/2AVR4mHCHBXBlVkewphcPAMumty7czzXrPnWfWqLTOliDnG"}
         data = json.dumps(statuslist, encoding="utf-8", ensure_ascii=False)
-        #log.debug(data)
+        # log.debug(data)
         if settings.SEND_STATUS_RECORD:
             try:
                 response = requests.post(srvurl, data.encode(), headers=headers)
@@ -112,11 +125,13 @@ class Alertutil(metaclass=Cached):
 
     def send_predict(self, predictlist):
         srvurl = settings.FAULT_RECORD_URL
-        #log.debug(srvurl)
-        #headers = {"content-type":"application/json","x-hasura-admin-secret":"passw0rd"}
-        headers = {"content-type":"application/json"}
+        # log.debug(srvurl)
+        # headers = {"content-type":"application/json","x-hasura-admin-secret":"passw0rd"}
+        # headers = {"content-type":"application/json"}
+        headers = {"content-type": "application/json",
+                   "x-token": "ap2jQ/2AVR4mHCHBXBlVkewphcPAMumty7czzXrPnWfWqLTOliDnG"}
         data = json.dumps(predictlist, encoding="utf-8", ensure_ascii=False)
-        #log.debug(data)
+        # log.debug(data)
         if settings.SEND_FAULT_RECORD:
             try:
                 response = requests.post(srvurl, data.encode(), headers=headers)
@@ -124,7 +139,6 @@ class Alertutil(metaclass=Cached):
             except Exception as exp:
                 log.error('Exception at alrtutil.send_predict() %s ' % exp)
                 traceback.print_exc()
-
 
 
 if __name__ == '__main__':
@@ -240,8 +254,8 @@ if __name__ == '__main__':
 
     log.debug(au.predictfield)
     log.debug(au.alertfield)
-    
-    
+
+
     log.debug(f"SELECT msg_calc_dvc_no, max({') as dvc_, max('.join(au.predictfield)}) as dvc_ FROM dev_predict WHERE msg_calc_parse_time > now() - INTERVAL '2 minutes' group by msg_calc_dvc_no")
     log.debug(f"SELECT msg_calc_dvc_no, max(dvc_{') as dvc_, max(dvc_'.join(au.alertfield)}) as dvc_ FROM dev_macda WHERE msg_calc_parse_time > now() - INTERVAL '2 minutes' group by msg_calc_dvc_no")
     log.debug(f"SELECT msg_calc_dvc_no, last(dvc_{',msg_calc_parse_time) as dvc_, last(dvc_'.join(au.partcodefield)},msg_calc_parse_time) as dvc_ FROM dev_macda WHERE msg_calc_parse_time > now() - INTERVAL '2 minutes' group by msg_calc_dvc_no")
@@ -262,7 +276,7 @@ if __name__ == '__main__':
     row1 = adf.loc[adf['name'] == 'bComuFlt_EEV_U12']
     log.debug(row1)
     log.debug('message_type' in row1.columns.values)
-    
+
     log.debug(au.__partcode__)
     pdf = au.__partcode__
     log.debug(pdf.columns.values)

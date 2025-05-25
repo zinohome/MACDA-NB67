@@ -341,8 +341,8 @@ class Nb67(KaitaiStruct):
         nb67dict = Nb67.from_file(binfile).__dict__.copy()
         lineno = int(str(nb67dict['dvc_train_no'])[:-3])
         trainno = int(str(nb67dict['dvc_train_no'])[-3:])
-        nb67dict['msg_calc_train_no'] = f"{str(lineno)}{str(trainno).zfill(3)}"
-        nb67dict['msg_calc_dvc_no'] = f"{str(lineno)}{str(trainno).zfill(3)}{str(nb67dict['dvc_carriage_no']).zfill(2)}"
+        nb67dict['msg_calc_train_no'] = f"{str(lineno).zfill(2)}{str(trainno).zfill(3)}"
+        nb67dict['msg_calc_dvc_no'] = f"{str(lineno).zfill(2)}{str(trainno).zfill(3)}{str(nb67dict['dvc_carriage_no']).zfill(2)}"
         '''
         if dev_mode:
             nb67dict[
@@ -392,8 +392,8 @@ class Nb67(KaitaiStruct):
         nb67dict = Nb67.from_bytes(bytesobj).__dict__.copy()
         lineno = int(str(nb67dict['dvc_train_no'])[:-3])
         trainno = int(str(nb67dict['dvc_train_no'])[-3:])
-        nb67dict['msg_calc_train_no'] = f"{str(lineno)}{str(trainno).zfill(3)}"
-        nb67dict['msg_calc_dvc_no'] = f"{str(lineno)}{str(trainno).zfill(3)}{str(nb67dict['dvc_carriage_no']).zfill(2)}"
+        nb67dict['msg_calc_train_no'] = f"{str(lineno).zfill(2)}{str(trainno).zfill(3)}"
+        nb67dict['msg_calc_dvc_no'] = f"{str(lineno).zfill(2)}{str(trainno).zfill(3)}{str(nb67dict['dvc_carriage_no']).zfill(2)}"
         '''
         if dev_mode:
             nb67dict[

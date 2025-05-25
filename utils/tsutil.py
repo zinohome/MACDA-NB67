@@ -11,6 +11,7 @@ import traceback
 import weakref
 import psycopg2
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from pgcopy import CopyManager
 from psycopg2 import pool
 from core.settings import settings
@@ -31,6 +32,8 @@ class Cached(type):
             obj = super().__call__(*args)
             self.__cache[args] = obj
             return obj
+
+
 class TSutil(metaclass=Cached):
     def __init__(self):
         log.debug('Connect to timescaledb uri [ %s ]' % settings.TSDB_URL)
@@ -53,23 +56,29 @@ class TSutil(metaclass=Cached):
             cur.execute(create_dev_json_table)
             cur.execute(create_pro_predict_table)
             cur.execute(create_dev_predict_table)
-            cur.execute("SELECT create_hypertable('pro_macda', 'msg_calc_dvc_time', chunk_time_interval => 86400000000, if_not_exists => TRUE);")
-            cur.execute("SELECT create_hypertable('dev_macda', 'msg_calc_parse_time', chunk_time_interval => 86400000000, if_not_exists => TRUE);")
-            cur.execute("SELECT create_hypertable('pro_macda_json', 'msg_calc_dvc_time', chunk_time_interval => 86400000000, if_not_exists => TRUE);")
-            cur.execute("SELECT create_hypertable('dev_macda_json', 'msg_calc_parse_time', chunk_time_interval => 86400000000, if_not_exists => TRUE);")
-            cur.execute("SELECT create_hypertable('pro_predict', 'msg_calc_dvc_time', chunk_time_interval => 86400000000, if_not_exists => TRUE);")
-            cur.execute("SELECT create_hypertable('dev_predict', 'msg_calc_parse_time', chunk_time_interval => 86400000000, if_not_exists => TRUE);")
-            #cur.execute("SELECT remove_retention_policy('pro_macda', True);")
+            cur.execute(
+                "SELECT create_hypertable('pro_macda', 'msg_calc_dvc_time', chunk_time_interval => 86400000000, if_not_exists => TRUE);")
+            cur.execute(
+                "SELECT create_hypertable('dev_macda', 'msg_calc_parse_time', chunk_time_interval => 86400000000, if_not_exists => TRUE);")
+            cur.execute(
+                "SELECT create_hypertable('pro_macda_json', 'msg_calc_dvc_time', chunk_time_interval => 86400000000, if_not_exists => TRUE);")
+            cur.execute(
+                "SELECT create_hypertable('dev_macda_json', 'msg_calc_parse_time', chunk_time_interval => 86400000000, if_not_exists => TRUE);")
+            cur.execute(
+                "SELECT create_hypertable('pro_predict', 'msg_calc_dvc_time', chunk_time_interval => 86400000000, if_not_exists => TRUE);")
+            cur.execute(
+                "SELECT create_hypertable('dev_predict', 'msg_calc_parse_time', chunk_time_interval => 86400000000, if_not_exists => TRUE);")
+            # cur.execute("SELECT remove_retention_policy('pro_macda', True);")
             cur.execute("SELECT add_retention_policy('pro_macda', INTERVAL '1 year', if_not_exists => true);")
-            #cur.execute("SELECT remove_retention_policy('dev_macda', True);")
+            # cur.execute("SELECT remove_retention_policy('dev_macda', True);")
             cur.execute("SELECT add_retention_policy('dev_macda', INTERVAL '1 year', if_not_exists => true);")
-            #cur.execute("SELECT remove_retention_policy('pro_macda_json', True);")
+            # cur.execute("SELECT remove_retention_policy('pro_macda_json', True);")
             cur.execute("SELECT add_retention_policy('pro_macda_json', INTERVAL '1 year', if_not_exists => true);")
-            #cur.execute("SELECT remove_retention_policy('dev_macda_json', True);")
+            # cur.execute("SELECT remove_retention_policy('dev_macda_json', True);")
             cur.execute("SELECT add_retention_policy('dev_macda_json', INTERVAL '1 year', if_not_exists => true);")
-            #cur.execute("SELECT remove_retention_policy('pro_predict', True);")
+            # cur.execute("SELECT remove_retention_policy('pro_predict', True);")
             cur.execute("SELECT add_retention_policy('pro_predict', INTERVAL '1 year', if_not_exists => true);")
-            #cur.execute("SELECT remove_retention_policy('dev_predict', True);")
+            # cur.execute("SELECT remove_retention_policy('dev_predict', True);")
             cur.execute("SELECT add_retention_policy('dev_predict', INTERVAL '1 year', if_not_exists => true);")
             conn.commit()
             cur.close()
@@ -114,8 +123,8 @@ class TSutil(metaclass=Cached):
         valuelst.append(str(jsonobj['msg_calc_dvc_no']))
         valuelst.append(str(jsonobj['msg_calc_train_no']))
         valuelst.append(json.dumps(jsonobj))
-        #log.debug(insertsql)
-        #log.debug(valuelst)
+        # log.debug(insertsql)
+        # log.debug(valuelst)
         try:
             conn = self.conn_pool.getconn()
             cur = conn.cursor()
@@ -134,7 +143,7 @@ class TSutil(metaclass=Cached):
         for (key, value) in jsonobj.items():
             if not key in ignorekeys:
                 cols.append(key)
-        #log.debug(cols)
+        # log.debug(cols)
         records = []
         for jsonobj in jsonobjlst:
             record = []
@@ -145,7 +154,7 @@ class TSutil(metaclass=Cached):
                     else:
                         record.append(value)
             records.append(record)
-        #log.debug(records)
+        # log.debug(records)
         try:
             conn = self.conn_pool.getconn()
             cur = conn.cursor()
@@ -175,7 +184,7 @@ class TSutil(metaclass=Cached):
                 record.append(self.parse_time(jsonobj['payload']['msg_calc_parse_time']))
             record.append(json.dumps(jsonobj['payload']))
             records.append(record)
-        #log.debug(records)
+        # log.debug(records)
         try:
             conn = self.conn_pool.getconn()
             cur = conn.cursor()
@@ -270,10 +279,10 @@ class TSutil(metaclass=Cached):
         querysql = ''
         if mode == 'dev':
             querysql = f"select msg_calc_dvc_no, approx_percentile(0.95, percentile_agg(wmode_u1)) as dvc_w_op_mode_u1, approx_percentile(0.95, percentile_agg(fas_u1)) as dvc_i_fat_u1, approx_percentile(0.95, percentile_agg(f_cp_u11)) as dvc_w_freq_u11, approx_percentile(0.95, percentile_agg(suckp_u11)) as dvc_i_suck_pres_u11, approx_percentile(0.95, percentile_agg(f_cp_u12)) as dvc_w_freq_u12, approx_percentile(0.95, percentile_agg(suckp_u12)) as dvc_i_suck_pres_u12, approx_percentile(0.95, percentile_agg(wmode_u2)) as dvc_w_op_mode_u2, approx_percentile(0.95, percentile_agg(fas_u2)) as dvc_i_fat_u2, approx_percentile(0.95, percentile_agg(f_cp_u21)) as dvc_w_freq_u21, approx_percentile(0.95, percentile_agg(suckp_u21)) as dvc_i_suck_pres_u21, approx_percentile(0.95, percentile_agg(f_cp_u22)) as dvc_w_freq_u22, approx_percentile(0.95, percentile_agg(suckp_u22)) as dvc_i_suck_pres_u22 " \
-                   f"FROM public.dev_macda where msg_calc_parse_time > now() - INTERVAL '2 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
+                       f"FROM public.dev_macda where msg_calc_parse_time > now() - INTERVAL '2 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
         else:
             querysql = f"select msg_calc_dvc_no, approx_percentile(0.95, percentile_agg(wmode_u1)) as dvc_w_op_mode_u1, approx_percentile(0.95, percentile_agg(fas_u1)) as dvc_i_fat_u1, approx_percentile(0.95, percentile_agg(f_cp_u11)) as dvc_w_freq_u11, approx_percentile(0.95, percentile_agg(suckp_u11)) as dvc_i_suck_pres_u11, approx_percentile(0.95, percentile_agg(f_cp_u12)) as dvc_w_freq_u12, approx_percentile(0.95, percentile_agg(suckp_u12)) as dvc_i_suck_pres_u12, approx_percentile(0.95, percentile_agg(wmode_u2)) as dvc_w_op_mode_u2, approx_percentile(0.95, percentile_agg(fas_u2)) as dvc_i_fat_u2, approx_percentile(0.95, percentile_agg(f_cp_u21)) as dvc_w_freq_u21, approx_percentile(0.95, percentile_agg(suckp_u21)) as dvc_i_suck_pres_u21, approx_percentile(0.95, percentile_agg(f_cp_u22)) as dvc_w_freq_u22, approx_percentile(0.95, percentile_agg(suckp_u22)) as dvc_i_suck_pres_u22 " \
-                   f"FROM public.pro_macda where msg_calc_dvc_time > now() - INTERVAL '2 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
+                       f"FROM public.pro_macda where msg_calc_dvc_time > now() - INTERVAL '2 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
         try:
             returndata = {}
             conn = self.conn_pool.getconn()
@@ -392,14 +401,14 @@ class TSutil(metaclass=Cached):
         querysql_30m = ''
         if mode == 'dev':
             querysql_3m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
-                       f"approx_percentile(0.95, percentile_agg(f_cp_u11)) as f_cp_u11, approx_percentile(0.95, percentile_agg(f_cp_u12)) as f_cp_u12, approx_percentile(0.95, percentile_agg(f_cp_u21)) as f_cp_u21, approx_percentile(0.95, percentile_agg(f_cp_u22)) as f_cp_u22, " \
-                       f"avg(ABS(i_cp_u11 - i_cp_u12)) as w_crntu1_sub, avg(ABS(i_cp_u21 - i_cp_u22)) as w_crntu2_sub " \
-                       f"FROM public.dev_macda where msg_calc_parse_time > now() - INTERVAL '3 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
+                          f"approx_percentile(0.95, percentile_agg(f_cp_u11)) as f_cp_u11, approx_percentile(0.95, percentile_agg(f_cp_u12)) as f_cp_u12, approx_percentile(0.95, percentile_agg(f_cp_u21)) as f_cp_u21, approx_percentile(0.95, percentile_agg(f_cp_u22)) as f_cp_u22, " \
+                          f"round(approx_percentile(0.8, percentile_agg(ABS(i_cp_u11-i_cp_u12)))) as w_crntu1_sub, round(approx_percentile(0.8, percentile_agg(ABS(i_cp_u21-i_cp_u22)))) as w_crntu2_sub " \
+                          f"FROM public.dev_macda where msg_calc_parse_time > now() - INTERVAL '3 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
 
             querysql_5m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
                           f"approx_percentile(0.95, percentile_agg(f_cp_u11)) as f_cp_u11, approx_percentile(0.95, percentile_agg(f_cp_u12)) as f_cp_u12, approx_percentile(0.95, percentile_agg(f_cp_u21)) as f_cp_u21, approx_percentile(0.95, percentile_agg(f_cp_u22)) as f_cp_u22, " \
-                          f"approx_percentile(0.95, percentile_agg(suckp_u11)) as suckp_u11, approx_percentile(0.95, percentile_agg(suckp_u12)) as suckp_u12, approx_percentile(0.95, percentile_agg(suckp_u21)) as suckp_u21, approx_percentile(0.95, percentile_agg(suckp_u22)) as suckp_u22, " \
-                          f"avg(ABS(fas_u1 - fas_u2)) as fas_sub, avg(ABS(ras_u1 - ras_u2)) as ras_sub " \
+                          f"approx_percentile(0.9, percentile_agg(suckp_u11)) as suckp_u11, approx_percentile(0.9, percentile_agg(suckp_u12)) as suckp_u12, approx_percentile(0.9, percentile_agg(suckp_u21)) as suckp_u21, approx_percentile(0.9, percentile_agg(suckp_u22)) as suckp_u22, " \
+                          f"round(approx_percentile(0.8, percentile_agg(ABS(fas_u1 - fas_u2)))) as fas_sub, round(approx_percentile(0.8, percentile_agg(ABS(ras_u1 - ras_u2)))) as ras_sub " \
                           f"FROM public.dev_macda where msg_calc_parse_time > now() - INTERVAL '5 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
 
             querysql_10m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
@@ -413,8 +422,8 @@ class TSutil(metaclass=Cached):
                            f"FROM public.dev_macda where msg_calc_parse_time > now() - INTERVAL '10 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
 
             querysql_15m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
-                          f"approx_percentile(0.95, percentile_agg(highpress_u11)) as highpress_u11, approx_percentile(0.95, percentile_agg(highpress_u12)) as highpress_u12, approx_percentile(0.95, percentile_agg(highpress_u21)) as highpress_u21, approx_percentile(0.95, percentile_agg(highpress_u22)) as highpress_u22 " \
-                          f"FROM public.dev_macda where msg_calc_parse_time > now() - INTERVAL '15 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
+                           f"approx_percentile(0.95, percentile_agg(highpress_u11)) as highpress_u11, approx_percentile(0.95, percentile_agg(highpress_u12)) as highpress_u12, approx_percentile(0.95, percentile_agg(highpress_u21)) as highpress_u21, approx_percentile(0.95, percentile_agg(highpress_u22)) as highpress_u22 " \
+                           f"FROM public.dev_macda where msg_calc_parse_time > now() - INTERVAL '15 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
 
             querysql_20m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
                            f"approx_percentile(0.95, percentile_agg(bflt_tempover)) as bflt_tempover, " \
@@ -433,13 +442,13 @@ class TSutil(metaclass=Cached):
         else:
             querysql_3m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
                           f"approx_percentile(0.95, percentile_agg(f_cp_u11)) as f_cp_u11, approx_percentile(0.95, percentile_agg(f_cp_u12)) as f_cp_u12, approx_percentile(0.95, percentile_agg(f_cp_u21)) as f_cp_u21, approx_percentile(0.95, percentile_agg(f_cp_u22)) as f_cp_u22, " \
-                          f"avg(ABS(i_cp_u11 - i_cp_u12)) as w_crntu1_sub, avg(ABS(i_cp_u21 - i_cp_u22)) as w_crntu2_sub " \
+                          f"round(approx_percentile(0.8, percentile_agg(ABS(i_cp_u11-i_cp_u12)))) as w_crntu1_sub, round(approx_percentile(0.8, percentile_agg(ABS(i_cp_u21-i_cp_u22)))) as w_crntu2_sub " \
                           f"FROM public.pro_macda where msg_calc_dvc_time > now() - INTERVAL '3 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
 
             querysql_5m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
                           f"approx_percentile(0.95, percentile_agg(f_cp_u11)) as f_cp_u11, approx_percentile(0.95, percentile_agg(f_cp_u12)) as f_cp_u12, approx_percentile(0.95, percentile_agg(f_cp_u21)) as f_cp_u21, approx_percentile(0.95, percentile_agg(f_cp_u22)) as f_cp_u22, " \
-                          f"approx_percentile(0.95, percentile_agg(suckp_u11)) as suckp_u11, approx_percentile(0.95, percentile_agg(suckp_u12)) as suckp_u12, approx_percentile(0.95, percentile_agg(suckp_u21)) as suckp_u21, approx_percentile(0.95, percentile_agg(suckp_u22)) as suckp_u22, " \
-                          f"avg(ABS(fas_u1 - fas_u2)) as fas_sub, avg(ABS(ras_u1 - ras_u2)) as ras_sub " \
+                          f"approx_percentile(0.9, percentile_agg(suckp_u11)) as suckp_u11, approx_percentile(0.9, percentile_agg(suckp_u12)) as suckp_u12, approx_percentile(0.9, percentile_agg(suckp_u21)) as suckp_u21, approx_percentile(0.9, percentile_agg(suckp_u22)) as suckp_u22, " \
+                          f"round(approx_percentile(0.8, percentile_agg(ABS(fas_u1 - fas_u2)))) as fas_sub, round(approx_percentile(0.8, percentile_agg(ABS(ras_u1 - ras_u2)))) as ras_sub " \
                           f"FROM public.pro_macda where msg_calc_dvc_time > now() - INTERVAL '5 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
 
             querysql_10m = f"select msg_calc_dvc_no, round(approx_percentile(0.95, percentile_agg(wmode_u1))) as dvc_w_op_mode_u1, round(approx_percentile(0.95, percentile_agg(wmode_u2))) as dvc_w_op_mode_u2, " \
@@ -471,17 +480,17 @@ class TSutil(metaclass=Cached):
                            f"approx_percentile(0.95, percentile_agg(presdiff_u1)) as presdiff_u1, approx_percentile(0.95, percentile_agg(presdiff_u2)) as presdiff_u2 " \
                            f"FROM public.pro_macda where msg_calc_dvc_time > now() - INTERVAL '30 minutes' and msg_calc_dvc_no = '{dvc_no}' group by msg_calc_dvc_no"
         try:
-            #log.debug(querysql_3m)
-            #log.debug(querysql_5m)
-            #log.debug(querysql_10m)
-            #log.debug(querysql_15m)
-            #log.debug(querysql_20m)
-            #log.debug(querysql_30m)
+            # log.debug(querysql_3m)
+            # log.debug(querysql_5m)
+            # log.debug(querysql_10m)
+            # log.debug(querysql_15m)
+            # log.debug(querysql_20m)
+            # log.debug(querysql_30m)
             returndata = {}
             returndata['len'] = 0
             conn = self.conn_pool.getconn()
             cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-            #query 3m
+            # query 3m
             cur.execute(querysql_3m)
             result = cur.fetchall()
             rlen = len(result)
@@ -493,7 +502,7 @@ class TSutil(metaclass=Cached):
             else:
                 rdata['data'] = None
             returndata['data3m'] = rdata
-            #query 5m
+            # query 5m
             cur.execute(querysql_5m)
             result = cur.fetchall()
             rlen = len(result)
@@ -505,7 +514,7 @@ class TSutil(metaclass=Cached):
             else:
                 rdata['data'] = None
             returndata['data5m'] = rdata
-            #query 10m
+            # query 10m
             cur.execute(querysql_10m)
             result = cur.fetchall()
             rlen = len(result)
@@ -517,7 +526,7 @@ class TSutil(metaclass=Cached):
             else:
                 rdata['data'] = None
             returndata['data10m'] = rdata
-            #query 15m
+            # query 15m
             cur.execute(querysql_15m)
             result = cur.fetchall()
             rlen = len(result)
@@ -529,7 +538,7 @@ class TSutil(metaclass=Cached):
             else:
                 rdata['data'] = None
             returndata['data15m'] = rdata
-            #query 20m
+            # query 20m
             cur.execute(querysql_20m)
             result = cur.fetchall()
             rlen = len(result)
@@ -541,7 +550,7 @@ class TSutil(metaclass=Cached):
             else:
                 rdata['data'] = None
             returndata['data20m'] = rdata
-            #query 30m
+            # query 30m
             cur.execute(querysql_30m)
             result = cur.fetchall()
             rlen = len(result)
@@ -563,7 +572,7 @@ class TSutil(metaclass=Cached):
 
     def predict(self, mode, dvc_no):
         predictdata = self.prepare_predictdata(mode, dvc_no)
-        #log.debug(predictdata)
+        # log.debug(predictdata)
         predictjson = {}
         if predictdata['len'] == 6:
             predictsave = 0
@@ -571,74 +580,106 @@ class TSutil(metaclass=Cached):
             log.debug('Predict Start ... ...')
             # ref leak predict 冷媒泄露预警
             ref_leak_u11 = 0
-            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 2 or round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) ==3) and (round(predictdata['data5m']['data']['f_cp_u11'])>30 and round(predictdata['data5m']['data']['suckp_u11'])<2) :
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 2 or round(
+                    predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 3) and (
+                    round(predictdata['data5m']['data']['f_cp_u11']) > 30 and round(
+                    predictdata['data5m']['data']['suckp_u11'], 2) < 2):
                 ref_leak_u11 = 1
-            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 1) and (round(predictdata['data15m']['data']['highpress_u11'])<5) :
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 1) and (
+                    round(predictdata['data15m']['data']['highpress_u11'], 2) < 5):
                 ref_leak_u11 = 1
             ref_leak_u12 = 0
-            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 2 or round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) ==3) and (round(predictdata['data5m']['data']['f_cp_u12'])>30 and round(predictdata['data5m']['data']['suckp_u12'])<2) :
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 2 or round(
+                    predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 3) and (
+                    round(predictdata['data5m']['data']['f_cp_u12']) > 30 and round(
+                    predictdata['data5m']['data']['suckp_u12'], 2) < 2):
                 ref_leak_u12 = 1
-            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 1) and (round(predictdata['data15m']['data']['highpress_u12'])<5) :
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u1']) == 1) and (
+                    round(predictdata['data15m']['data']['highpress_u12'], 2) < 5):
                 ref_leak_u12 = 1
             ref_leak_u21 = 0
-            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 2 or round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) ==3) and (round(predictdata['data5m']['data']['f_cp_u21'])>30 and round(predictdata['data5m']['data']['suckp_u21'])<2) :
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 2 or round(
+                    predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 3) and (
+                    round(predictdata['data5m']['data']['f_cp_u21']) > 30 and round(
+                    predictdata['data5m']['data']['suckp_u21'], 2) < 2):
                 ref_leak_u21 = 1
-            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 1) and (round(predictdata['data15m']['data']['highpress_u21'])<5) :
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 1) and (
+                    round(predictdata['data15m']['data']['highpress_u21'], 2) < 5):
                 ref_leak_u21 = 1
             ref_leak_u22 = 0
-            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 2 or round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) ==3) and (round(predictdata['data5m']['data']['f_cp_u22'])>30 and round(predictdata['data5m']['data']['suckp_u22'])<2) :
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 2 or round(
+                    predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 3) and (
+                    round(predictdata['data5m']['data']['f_cp_u22']) > 30 and round(
+                    predictdata['data5m']['data']['suckp_u22'], 2) < 2):
                 ref_leak_u22 = 1
-            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 1) and (round(predictdata['data15m']['data']['highpress_u22'])<5) :
+            if (round(predictdata['data5m']['data']['dvc_w_op_mode_u2']) == 1) and (
+                    round(predictdata['data15m']['data']['highpress_u22'], 2) < 5):
                 ref_leak_u22 = 1
 
             # f_cp predict 制冷系统预警
             f_cp_u1 = 0
-            if (round(predictdata['data3m']['data']['f_cp_u11']) == round(predictdata['data3m']['data']['f_cp_u12'])) and (round(predictdata['data3m']['data']['w_crntu1_sub'],1) > 2):
+            if (round(predictdata['data3m']['data']['f_cp_u11']) == round(
+                    predictdata['data3m']['data']['f_cp_u12'])) and (
+                    round(predictdata['data3m']['data']['w_crntu1_sub'], 1) > 2):
                 f_cp_u1 = 1
-            if (round(predictdata['data10m']['data']['sp_u11'],1) > 20 or round(predictdata['data10m']['data']['sp_u11'],1) < -8 or round(predictdata['data10m']['data']['sp_u12'],1) > 20 or round(predictdata['data10m']['data']['sp_u12'],1) < -8):
+            if (round(predictdata['data10m']['data']['sp_u11'], 1) > 20 or round(
+                    predictdata['data10m']['data']['sp_u11'], 1) < -8 or round(predictdata['data10m']['data']['sp_u12'],
+                                                                               1) > 20 or round(
+                    predictdata['data10m']['data']['sp_u12'], 1) < -8):
                 f_cp_u1 = 1
             f_cp_u2 = 0
-            if (round(predictdata['data3m']['data']['f_cp_u21']) == round(predictdata['data3m']['data']['f_cp_u22'])) and (round(predictdata['data3m']['data']['w_crntu2_sub'],1) > 2):
+            if (round(predictdata['data3m']['data']['f_cp_u21']) == round(
+                    predictdata['data3m']['data']['f_cp_u22'])) and (
+                    round(predictdata['data3m']['data']['w_crntu2_sub'], 1) > 2):
                 f_cp_u2 = 1
-            if (round(predictdata['data10m']['data']['sp_u21'],1) > 20 or round(predictdata['data10m']['data']['sp_u21'],1) < -8 or round(predictdata['data10m']['data']['sp_u22'],1) > 20 or round(predictdata['data10m']['data']['sp_u22'],1) < -8):
+            if (round(predictdata['data10m']['data']['sp_u21'], 1) > 20 or round(
+                    predictdata['data10m']['data']['sp_u21'], 1) < -8 or round(predictdata['data10m']['data']['sp_u22'],
+                                                                               1) > 20 or round(
+                    predictdata['data10m']['data']['sp_u22'], 1) < -8):
                 f_cp_u2 = 1
 
             # fas & ras predict 新风温度传感器 & 回风温度传感器 预警
             f_fas = 0
-            if round(predictdata['data5m']['data']['fas_sub'],1) > 8 :
+            if round(predictdata['data5m']['data']['fas_sub'], 1) > 8:
                 f_fas = 1
             f_ras = 0
             if round(predictdata['data5m']['data']['ras_sub'], 1) > 8:
                 f_ras = 1
 
-            #cabin_overtemp predict 车厢温度超温预警
+            # cabin_overtemp predict 车厢温度超温预警
             cabin_overtemp = 0
-            if round(predictdata['data20m']['data']['bflt_tempover'],1) > 0:
+            if round(predictdata['data20m']['data']['bflt_tempover'], 1) > 0:
                 cabin_overtemp = 1
 
-            #f_presdiff  predict 滤网脏堵预警
+            # f_presdiff  predict 滤网脏堵预警
             f_presdiff_u1 = 0
-            if round(predictdata['data30m']['data']['cfbk_ef_u11']) ==1 and round(predictdata['data30m']['data']['presdiff_u1']) > 300:
+            if round(predictdata['data30m']['data']['cfbk_ef_u11']) == 1 and round(
+                    predictdata['data30m']['data']['presdiff_u1']) > 300:
                 f_presdiff_u1 = 1
             f_presdiff_u2 = 0
-            if round(predictdata['data30m']['data']['cfbk_ef_u21']) ==1 and round(predictdata['data30m']['data']['presdiff_u2']) > 300:
+            if round(predictdata['data30m']['data']['cfbk_ef_u21']) == 1 and round(
+                    predictdata['data30m']['data']['presdiff_u2']) > 300:
                 f_presdiff_u2 = 1
 
-            #f_ef predict 通风机电流预警
+            # f_ef predict 通风机电流预警
             f_ef_u11 = 0
-            if round(predictdata['data10m']['data']['cfbk_ef_u11']) == 1 and round(predictdata['data10m']['data']['i_ef_u11'],1) > 2:
+            if round(predictdata['data10m']['data']['cfbk_ef_u11']) == 1 and round(
+                    predictdata['data10m']['data']['i_ef_u11'], 1) > 2:
                 f_ef_u11 = 1
             f_ef_u12 = 0
-            if round(predictdata['data10m']['data']['cfbk_ef_u11']) == 1 and round(predictdata['data10m']['data']['i_ef_u12'],1) > 2:
+            if round(predictdata['data10m']['data']['cfbk_ef_u11']) == 1 and round(
+                    predictdata['data10m']['data']['i_ef_u12'], 1) > 2:
                 f_ef_u12 = 1
             f_ef_u21 = 0
-            if round(predictdata['data10m']['data']['cfbk_ef_u21']) == 1 and round(predictdata['data10m']['data']['i_ef_u21'],1) > 2:
+            if round(predictdata['data10m']['data']['cfbk_ef_u21']) == 1 and round(
+                    predictdata['data10m']['data']['i_ef_u21'], 1) > 2:
                 f_ef_u21 = 1
             f_ef_u22 = 0
-            if round(predictdata['data10m']['data']['cfbk_ef_u21']) == 1 and round(predictdata['data10m']['data']['i_ef_u22'],1) > 2:
+            if round(predictdata['data10m']['data']['cfbk_ef_u21']) == 1 and round(
+                    predictdata['data10m']['data']['i_ef_u22'], 1) > 2:
                 f_ef_u22 = 1
 
-            #f_cf predict 冷凝风机电流预警
+            # f_cf predict 冷凝风机电流预警
             f_cf_u11 = 0
             if round(predictdata['data10m']['data']['cfbk_cf_u11']) == 1 and round(
                     predictdata['data10m']['data']['i_cf_u11'], 1) > 2.9:
@@ -658,40 +699,57 @@ class TSutil(metaclass=Cached):
 
             # f_exufan predict 废排风机电流预警
             f_exufan = 0
-            if round(predictdata['data10m']['data']['cfbk_exufan']) ==1 and round(predictdata['data10m']['data']['i_exufan'],1) > 4:
+            if round(predictdata['data10m']['data']['cfbk_exufan']) == 1 and round(
+                    predictdata['data10m']['data']['i_exufan'], 1) > 4:
                 f_exufan = 1
 
             # f_fas predict 压缩机电流预警
             f_fas_u11 = 0
-            if round(predictdata['data10m']['data']['fas_u1'],1) < 35 and round(predictdata['data10m']['data']['i_cp_u11'],1) > 18:
+            if round(predictdata['data10m']['data']['fas_u1'], 1) < 35 and round(
+                    predictdata['data10m']['data']['i_cp_u11'], 1) > 18:
                 f_fas_u11 = 1
             f_fas_u21 = 0
-            if round(predictdata['data10m']['data']['fas_u1'],1) < 35 and round(predictdata['data10m']['data']['i_cp_u12'],1) > 18:
+            if round(predictdata['data10m']['data']['fas_u1'], 1) < 35 and round(
+                    predictdata['data10m']['data']['i_cp_u12'], 1) > 18:
                 f_fas_u21 = 1
             f_fas_u12 = 0
-            if round(predictdata['data10m']['data']['fas_u2'],1) < 35 and round(predictdata['data10m']['data']['i_cp_u21'],1) > 18:
+            if round(predictdata['data10m']['data']['fas_u2'], 1) < 35 and round(
+                    predictdata['data10m']['data']['i_cp_u21'], 1) > 18:
                 f_fas_u12 = 1
             f_fas_u22 = 0
-            if round(predictdata['data10m']['data']['fas_u2'],1) < 35 and round(predictdata['data10m']['data']['i_cp_u22'],1) > 18:
+            if round(predictdata['data10m']['data']['fas_u2'], 1) < 35 and round(
+                    predictdata['data10m']['data']['i_cp_u22'], 1) > 18:
                 f_fas_u22 = 1
 
             # f_aq predict 空气质量监测终端预警
             f_aq_u1 = 0
-            if (round(predictdata['data20m']['data']['cfbk_ef_u11']) == 1) and ( round(predictdata['data20m']['data']['aq_co2_u1'])>1200 or round(predictdata['data20m']['data']['aq_pm2_5_u1'])>75 or round(predictdata['data20m']['data']['aq_pm10_u1'])>150 or round(predictdata['data20m']['data']['aq_tvoc_u1'])>600):
+            if (round(predictdata['data20m']['data']['cfbk_ef_u11']) == 1) and (
+                    round(predictdata['data20m']['data']['aq_co2_u1']) > 1200 or round(
+                    predictdata['data20m']['data']['aq_pm2_5_u1']) > 75 or round(
+                    predictdata['data20m']['data']['aq_pm10_u1']) > 150 or round(
+                    predictdata['data20m']['data']['aq_tvoc_u1']) > 600):
                 f_aq_u1 = 1
             f_aq_u2 = 0
-            if (round(predictdata['data20m']['data']['cfbk_ef_u21']) == 1) and ( round(predictdata['data20m']['data']['aq_co2_u2'])>1200 or round(predictdata['data20m']['data']['aq_pm2_5_u2'])>75 or round(predictdata['data20m']['data']['aq_pm10_u2'])>150 or round(predictdata['data20m']['data']['aq_tvoc_u2'])>600):
+            if (round(predictdata['data20m']['data']['cfbk_ef_u21']) == 1) and (
+                    round(predictdata['data20m']['data']['aq_co2_u2']) > 1200 or round(
+                    predictdata['data20m']['data']['aq_pm2_5_u2']) > 75 or round(
+                    predictdata['data20m']['data']['aq_pm10_u2']) > 150 or round(
+                    predictdata['data20m']['data']['aq_tvoc_u2']) > 600):
                 f_aq_u2 = 1
 
-            predictsave = (f"{ref_leak_u11},{ref_leak_u12},{ref_leak_u21},{ref_leak_u22},{f_cp_u1},{f_cp_u2},{f_fas},{f_ras},{cabin_overtemp},{f_presdiff_u1},{f_presdiff_u2},"
-                           f"{f_ef_u11},{f_ef_u12},{f_ef_u21},{f_ef_u22},{f_cf_u11},{f_cf_u12},{f_cf_u21},{f_cf_u22},{f_exufan},{f_fas_u11},{f_fas_u12},{f_fas_u21},{f_fas_u22},{f_aq_u1},{f_aq_u2}")
-            predictskey = ['ref_leak_u11','ref_leak_u12','ref_leak_u21','ref_leak_u22','f_cp_u1','f_cp_u2','f_fas','f_ras','cabin_overtemp','f_presdiff_u1','f_presdiff_u2','f_ef_u11','f_ef_u12','f_ef_u21','f_ef_u22','f_cf_u11','f_cf_u12','f_cf_u21','f_cf_u22','f_exufan','f_fas_u11','f_fas_u12','f_fas_u21','f_fas_u22','f_aq_u1','f_aq_u2']
+            predictsave = (
+                f"{ref_leak_u11},{ref_leak_u12},{ref_leak_u21},{ref_leak_u22},{f_cp_u1},{f_cp_u2},{f_fas},{f_ras},{cabin_overtemp},{f_presdiff_u1},{f_presdiff_u2},"
+                f"{f_ef_u11},{f_ef_u12},{f_ef_u21},{f_ef_u22},{f_cf_u11},{f_cf_u12},{f_cf_u21},{f_cf_u22},{f_exufan},{f_fas_u11},{f_fas_u12},{f_fas_u21},{f_fas_u22},{f_aq_u1},{f_aq_u2}")
+            predictskey = ['ref_leak_u11', 'ref_leak_u12', 'ref_leak_u21', 'ref_leak_u22', 'f_cp_u1', 'f_cp_u2',
+                           'f_fas', 'f_ras', 'cabin_overtemp', 'f_presdiff_u1', 'f_presdiff_u2', 'f_ef_u11', 'f_ef_u12',
+                           'f_ef_u21', 'f_ef_u22', 'f_cf_u11', 'f_cf_u12', 'f_cf_u21', 'f_cf_u22', 'f_exufan',
+                           'f_fas_u11', 'f_fas_u12', 'f_fas_u21', 'f_fas_u22', 'f_aq_u1', 'f_aq_u2']
             for k in range(len(predictskey)):
-                predictjson[predictskey[k]] = list(map(int,predictsave.split(',')))[k]
-            #log.debug(predictskey)
-            #log.debug(predictsave)
-            #log.debug(list(map(int,predictsave.split(','))))
-            #log.debug(sum(list(map(int,predictsave.split(',')))))
+                predictjson[predictskey[k]] = list(map(int, predictsave.split(',')))[k]
+            # log.debug(predictskey)
+            # log.debug(predictsave)
+            # log.debug(list(map(int,predictsave.split(','))))
+            # log.debug(sum(list(map(int,predictsave.split(',')))))
             log.debug(predictjson)
             log.debug('Predict ... Success !')
             return predictjson
@@ -699,26 +757,42 @@ class TSutil(metaclass=Cached):
             return predictjson
 
     def insert_predictdata(self, tablename, jsonobj):
+        # 定义三个空列表，用于存储jsonobj中的键、值和占位符
         keylst = []
         valuelst = []
         masklst = []
+        # 遍历jsonobj中的键值对
         for (key, value) in jsonobj.items():
+            # 将键添加到keylst中
             keylst.append(key)
+            # 将值转换为字符串后添加到valuelst中
             valuelst.append(str(value))
+            # 将占位符添加到masklst中
             masklst.append('%s')
+        # 将keylst中的元素用逗号连接成一个字符串
         keystr = ','.join(keylst)
+        # 将masklst中的元素用逗号连接成一个字符串
         maskstr = ','.join(masklst)
+        # 构造插入语句
         insertsql = f"INSERT INTO {tablename} ({keystr}) VALUES ({maskstr})"
         # log.debug(insertsql)
         try:
+            # 从连接池中获取一个连接
             conn = self.conn_pool.getconn()
+            # 创建游标
             cur = conn.cursor()
+            # 执行插入语句
             cur.execute(insertsql, valuelst)
+            # 提交事务
             conn.commit()
+            # 关闭游标
             cur.close()
+            # 将连接放回连接池
             self.conn_pool.putconn(conn)
         except Exception as exp:
+            # 记录错误日志
             log.error('Exception at tsutil.insert_predictdata() %s ' % exp)
+            # 打印异常堆栈信息
             traceback.print_exc()
 
     def __del__(self):
@@ -727,23 +801,24 @@ class TSutil(metaclass=Cached):
         log.debug("PostgreSQL connection pool is closed")
 
     def parse_time(self, txt):
-        date_s,time_s = txt.split(' ')
+        date_s, time_s = txt.split(' ')
         year_s, mon_s, day_s = date_s.split('-')
         hour_s, minute_s, second_s = time_s.split(':')
-        return datetime(int(year_s), int(mon_s), int(day_s), int(hour_s), int(minute_s), int(second_s))
+
+        dt = datetime(int(year_s), int(mon_s), int(day_s), int(hour_s), int(minute_s), int(second_s))
+        tz = ZoneInfo("Asia/Shanghai")
+        dt_with_tz = dt.replace(tzinfo=tz)
+        return dt_with_tz
+
 
 if __name__ == '__main__':
-    #tu = TSutil()
-    #tu.predict('dev', '700203')
-    print(round(0.999,1))
-    print(round(4.100053286500865,1))
-    if round(0.999,1)==1 and round(4.100053286500865,1) > 4:
-        print(round(4.100053286500865,1))
+    tu = TSutil()
+    tu.predict('dev', '0702501')
     '''
     tu = TSutil()
     jobj = {"schema":"s1","playload":"p1"}
     #tu.insert('dev_macda', jobj)
-    
+
     result = tu.get_refdata('dev', '5-98-2')
     if result['len'] > 0:
         log.debug(result['data']['msg_calc_dvc_no'])
